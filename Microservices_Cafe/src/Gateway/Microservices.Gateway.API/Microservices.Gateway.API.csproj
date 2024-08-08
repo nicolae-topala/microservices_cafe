@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>21ea04bc-5fd2-4c7b-a10f-577e49797456</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker\docker-compose\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BananaCakePop.Services" Version="1.0.0" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.9" />
+    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.9.9" />
+    <PackageReference Include="HotChocolate.Fusion" Version="13.9.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+  </ItemGroup>
+
+</Project>
