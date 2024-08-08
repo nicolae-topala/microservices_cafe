@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{411978FE-6274-470C-A77F-5369697A3CAA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Gateway.API", "src\Gateway\Microservices.Gateway.API\Microservices.Gateway.API.csproj", "{DAF9773E-BAEE-4E50-B5A4-BF94F6F24698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Gateway.API", "src\Gateway\MicroservicesCafe.Gateway.API\MicroservicesCafe.Gateway.API.csproj", "{DAF9773E-BAEE-4E50-B5A4-BF94F6F24698}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Product.API", "src\Microservices\Product\MicroservicesCafe.Product.API\MicroservicesCafe.Product.API.csproj", "{51009FAA-B56C-4E20-972E-9C1749C5D4B1}"
 EndProject

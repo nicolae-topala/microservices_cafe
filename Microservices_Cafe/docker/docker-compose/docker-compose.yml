@@ -1,5 +1,5 @@
 version: '3.4'
-name: MicroservicesCafe
+name: microservices_cafe
 
 networks:
     rabbitmq_net:
@@ -13,13 +13,13 @@ services:
         - rabbitmq_net
 
   mssql:
-    container_name: MSSQL
+    container_name: mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
     networks:
         - rabbitmq_net
 
   microservicescafe.gateway.api:
-    container_name: gateway.api
+    container_name: gateway_api
     image: ${DOCKER_REGISTRY-}microservicescafegatewayapi
     build:
         context: ../..
@@ -30,7 +30,7 @@ services:
         - mssql
 
   microservicescafe.product.api:
-    container_name: product.api
+    container_name: product_api
     image: ${DOCKER_REGISTRY-}microservicescafeproductapi
     build:
       context: ../..
