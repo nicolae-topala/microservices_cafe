@@ -12,4 +12,12 @@
     <Folder Include="Messaging\EventHandlers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MicroservicesCafe.Product.Application\MicroservicesCafe.Product.Application.csproj" />
+  </ItemGroup>
+
 </Project>

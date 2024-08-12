@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Product.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Product.Application", "src\Microservices\Product\MicroservicesCafe.Product.Application\MicroservicesCafe.Product.Application.csproj", "{914D452D-9F03-4798-B479-2AC25ABA19A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Product.Infrastructure", "src\Microservices\Product\MicroservicesCafe.Product.Infrastructure\MicroservicesCafe.Product.Infrastructure.csproj", "{72EEC69D-1005-4F49-BF89-ED3D3D5684A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Product.Persistance", "src\Microservices\Product\MicroservicesCafe.Product.Infrastructure\MicroservicesCafe.Product.Persistance.csproj", "{72EEC69D-1005-4F49-BF89-ED3D3D5684A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Product.Shared", "src\Microservices\Product\MicroservicesCafe.Product.Shared\MicroservicesCafe.Product.Shared.csproj", "{373CEAA3-9160-456C-95A0-2807683A706B}"
 EndProject
