@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using MicroservicesCafe.Shared.Abstractions;
 using MicroservicesCafe.Shared.BuildingBlocks.Outbox;
-using MicroservicesCafe.Shared.Primitives;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Quartz;

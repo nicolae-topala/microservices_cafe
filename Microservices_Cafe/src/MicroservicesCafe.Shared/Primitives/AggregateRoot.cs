@@ -1,10 +1,12 @@
-﻿namespace MicroservicesCafe.Shared.Primitives;
+﻿using MicroservicesCafe.Shared.Abstractions;
+
+namespace MicroservicesCafe.Shared.Primitives;
 
 public class AggregateRoot : BaseEntity
 {
 	private readonly List<IDomainEvent> _domainEvents = new();
 
-	protected AggregateRoot(Guid id): base(id) { }
+	protected AggregateRoot(): base() { }
 
 	protected void RaiseDomainEvent(IDomainEvent domainEvent) =>
 		_domainEvents.Add(domainEvent);

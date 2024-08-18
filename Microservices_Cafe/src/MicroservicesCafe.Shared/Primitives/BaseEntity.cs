@@ -4,9 +4,9 @@ public abstract class BaseEntity : IEquatable<BaseEntity>
 {
     public Guid Id { get; private init; }
 
-    protected BaseEntity(Guid id)
+    protected BaseEntity()
     {
-        Id = id;
+        Id = Guid.NewGuid();
     }
 
     public static bool operator ==(BaseEntity? first, BaseEntity? second) =>

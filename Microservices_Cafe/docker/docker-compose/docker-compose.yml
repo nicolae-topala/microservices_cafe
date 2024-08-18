@@ -29,12 +29,12 @@ services:
     depends_on:
         - mssql
 
-  microservicescafe.product.api:
-    container_name: product_api
-    image: ${DOCKER_REGISTRY-}microservicescafeproductapi
+  microservicescafe.products.api:
+    container_name: products_api
+    image: ${DOCKER_REGISTRY-}microservicescafeproductsapi
     build:
       context: ../..
-      dockerfile: src/Microservices/Product/MicroservicesCafe.Product.API/Dockerfile
+      dockerfile: src/Microservices/Products/MicroservicesCafe.Products.API/Dockerfile
     networks:
         - rabbitmq_net
     depends_on:
