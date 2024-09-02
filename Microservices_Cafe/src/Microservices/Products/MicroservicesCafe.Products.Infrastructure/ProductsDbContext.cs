@@ -2,7 +2,6 @@
 using MicroservicesCafe.Products.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace MicroservicesCafe.Products.Infrastructure;
 
 public class ProductsDbContext : DbContext, IProductsDbContext
@@ -16,4 +15,6 @@ public class ProductsDbContext : DbContext, IProductsDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) => await base.SaveChangesAsync(cancellationToken);
 }

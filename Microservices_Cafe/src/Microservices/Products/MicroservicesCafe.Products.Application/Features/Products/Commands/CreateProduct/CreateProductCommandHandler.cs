@@ -1,33 +1,39 @@
-﻿using MicroservicesCafe.Products.Application.Abstractions;
+﻿using Mapster;
+using MicroservicesCafe.Products.Application.Abstractions;
 using MicroservicesCafe.Products.Domain.Entities;
+using MicroservicesCafe.Products.Shared.DTOs;
 using MicroservicesCafe.Shared.Abstractions.Messaging;
 using MicroservicesCafe.Shared.BuildingBlocks.Result;
-using MicroservicesCafe.Shared.Primitives;
 
 namespace MicroservicesCafe.Products.Application.Features.Products.Commands.CreateProduct;
 
-public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand, EntityCreatedResponse>
+public class CreateProductCommandHandler(IProductsDbContext dbContext) 
+    : ICommandHandler<CreateProductCommand, ProductDto>
 {
-    private readonly IProductsDbContext _dbContext;
-
-    public CreateProductCommandHandler(IProductsDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
-    public async Task<Result<EntityCreatedResponse>> Handle(CreateProductCommand request, 
+    public async Task<Result<ProductDto>> Handle(
+        CreateProductCommand request, 
         CancellationToken cancellationToken)
     {
-        var productResult = Product.Create(request.Name, request.Description, request.Price, request.Type, request.CategoryId);
+        var productResult = Product.Create(
+            request.Product.Name, 
+            request.Product.Description, 
+            request.Product.Price, 
+            request.Product.Type, 
+            request.Product.CategoryId);
 
         if (productResult.IsFailure) 
         {
-            return Result.Failure<EntityCreatedResponse>(productResult.Error);
+            return Result.Failure<ProductDto>(productResult.Error);
         }
 
-        await _dbContext.Products.AddAsync(productResult.Value, cancellationToken).ConfigureAwait(false);
+        await dbContext.Products
+            .AddAsync(productResult.Value, cancellationToken)
+            .ConfigureAwait(false);
 
-        return Result.Success(new EntityCreatedResponse(productResult.Value.Id));
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        var productDto = productResult.Value.Adapt<ProductDto>();
+        return Result.Success(productDto);
     }
 }
 

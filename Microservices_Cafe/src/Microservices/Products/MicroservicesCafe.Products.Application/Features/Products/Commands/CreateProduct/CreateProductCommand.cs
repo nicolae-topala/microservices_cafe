@@ -1,14 +1,10 @@
-﻿using MicroservicesCafe.Shared.Abstractions.Messaging;
-using MicroservicesCafe.Shared.Enums;
-using MicroservicesCafe.Shared.Primitives;
-using MicroservicesCafe.Shared.ValueObjects;
+﻿using MediatR;
+using MicroservicesCafe.Products.Shared.DTOs;
+using MicroservicesCafe.Shared.Abstractions.Messaging;
+using MicroservicesCafe.Shared.BuildingBlocks.Result;
 
 namespace MicroservicesCafe.Products.Application.Features.Products.Commands.CreateProduct;
 
-public sealed record CreateProductCommand(
-    string Name,
-    string Description,
-    Price Price,
-    ProductTypeEnum Type,
-    List<string> Ingredients,
-    Guid CategoryId) : ICommand<EntityCreatedResponse>;
+public record CreateProductCommand(CreateProductDto Product) : ICommand<ProductDto>
+{
+}

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Mapster;
+using MapsterMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -10,7 +11,8 @@ namespace MicroservicesCafe.Products.Application
     {
         public static readonly Assembly currentAssembly = typeof(DependencyInjection).Assembly;
 
-        public static IServiceCollection RegisterApplicationServices(this IServiceCollection services, 
+        public static IServiceCollection RegisterApplicationServices(
+            this IServiceCollection services, 
             IConfiguration configuration)
         {
             services.AddMediatR(configuration =>
@@ -18,16 +20,18 @@ namespace MicroservicesCafe.Products.Application
 
             services.AddValidatorsFromAssembly(currentAssembly);
 
+            services.RegisterMapsterConfiguration();
+
             return services;
         }
 
         public static IServiceCollection RegisterMapsterConfiguration(this IServiceCollection services)
         {
-            //TypeAdapter<>
-            //    .NewConfig()
-            //    .Map();
+            var config = new TypeAdapterConfig();
+            config.Scan(currentAssembly);
 
-            TypeAdapterConfig.GlobalSettings.Scan(currentAssembly);
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
 
             return services;
         }

@@ -1,4 +1,3 @@
-using HotChocolate.Data;
 using MicroservicesCafe.Products.API.Infrastructure.Extensions;
 using MicroservicesCafe.Products.Application;
 using MicroservicesCafe.Products.Infrastructure;
@@ -7,8 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddGraphQLServer()
-    .RegisterDbContext<ProductsDbContext>(DbContextKind.Pooled)
-    .AddTypes();
+    .AddTypes()
+    .AddMutationConventions(applyToAllMutations: true);
+    //.AddDefaultTransactionScopeHandler();
 
 builder.Services
     .RegisterApplicationServices(builder.Configuration)

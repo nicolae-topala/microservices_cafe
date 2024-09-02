@@ -2,7 +2,7 @@ version: '3.4'
 name: microservices_cafe
 
 networks:
-    rabbitmq_net:
+    microservicescafe_net:
         driver: bridge
 
 services:
@@ -10,13 +10,13 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     networks:
-        - rabbitmq_net
+        - microservicescafe_net
 
   mssql:
     container_name: mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
     networks:
-        - rabbitmq_net
+        - microservicescafe_net
 
   microservicescafe.gateway.api:
     container_name: gateway_api
@@ -25,7 +25,7 @@ services:
         context: ../..
         dockerfile: src/Gateway/MicroservicesCafe.Gateway.API/Dockerfile  
     networks:
-        - rabbitmq_net
+        - microservicescafe_net
     depends_on:
         - mssql
 
@@ -36,7 +36,6 @@ services:
       context: ../..
       dockerfile: src/Microservices/Products/MicroservicesCafe.Products.API/Dockerfile
     networks:
-        - rabbitmq_net
+        - microservicescafe_net
     depends_on:
         - mssql
-        

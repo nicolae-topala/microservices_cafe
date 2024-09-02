@@ -9,4 +9,6 @@ public interface IProductsDbContext
     DbSet<Product> Products { get; }
     DbSet<Category> Categories { get; }
     DatabaseFacade Database { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

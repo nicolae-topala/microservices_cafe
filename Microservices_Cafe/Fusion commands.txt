@@ -1,0 +1,8 @@
+// Generate schema
+dotnet run --project ./src/Microservices/Products/MicroservicesCafe.Products.API -- schema export --output schema.graphql
+
+// Pack subgraph
+dotnet fusion subgraph pack -w ./src/Microservices/Products/MicroservicesCafe.Products.API
+
+// Compose
+dotnet fusion compose -p ./src/Gateway/MicroservicesCafe.Gateway.API/gateway -s ./src/Microservices/Products/MicroservicesCafe.Products.API
