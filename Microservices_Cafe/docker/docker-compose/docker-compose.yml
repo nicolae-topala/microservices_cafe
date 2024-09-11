@@ -39,3 +39,14 @@ services:
         - microservicescafe_net
     depends_on:
         - mssql
+
+  auth.server:
+    container_name: auth_server
+    image: ${DOCKER_REGISTRY-}authserver
+    build:
+      context: ../..
+      dockerfile: src/Auth/Auth.Server/Dockerfile
+    networks:
+        - microservicescafe_net
+    depends_on:
+        - mssql

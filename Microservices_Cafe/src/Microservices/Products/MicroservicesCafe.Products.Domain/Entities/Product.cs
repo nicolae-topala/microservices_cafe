@@ -21,12 +21,7 @@ public sealed class Product : AggregateRoot
     {
     }
 
-    private Product(
-        string name,
-        string description,
-        Price price,
-        ProductTypeEnum type,
-        Guid categoryId) : base()
+    private Product(string name, string description, Price price, ProductTypeEnum type, Guid categoryId) : base()
     {
         Name = name;
         Description = description;
@@ -35,12 +30,7 @@ public sealed class Product : AggregateRoot
         CategoryId = categoryId;
     }
 
-    public static Result<Product> Create(
-        string name,
-        string description,
-        Price price,
-        ProductTypeEnum type,
-        Guid categoryId)
+    public static Result<Product> Create(string name, string description, Price price, ProductTypeEnum type, Guid categoryId)
     {
         var trimmedName = name.Trim();
         var trimmedDescription = description.Trim();

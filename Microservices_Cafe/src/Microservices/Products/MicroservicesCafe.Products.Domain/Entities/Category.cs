@@ -14,6 +14,7 @@ public sealed class Category : BaseEntity
 
     public static Result<Category> Create(string name)
     {
+        var nameMaxLength = 64;
         var trimmedName = name.Trim();
 
         if (string.IsNullOrWhiteSpace(trimmedName))
@@ -21,7 +22,7 @@ public sealed class Category : BaseEntity
             return Result.Failure<Category>(new Error("", ""));
         }
 
-        if (trimmedName.Length > 64)
+        if (trimmedName.Length > nameMaxLength)
         {
             return Result.Failure<Category>(new Error("", ""));
         }
