@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+var environment = builder.Environment;
 
 builder.Services.AddDatabase(configuration);
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
@@ -14,7 +15,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddDefaultUI();
 
 builder.Services.AddQuartzForOpenIddict();
-builder.Services.RegisterOpenIddict(configuration);
+builder.Services.RegisterOpenIddict(configuration, environment);
 
 builder.Services.AddHostedService<Worker>();
 

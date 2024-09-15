@@ -1,6 +1,8 @@
 ﻿using MassTransit;
 using MicroservicesCafe.Products.Infrastructure;
 using MicroservicesCafe.Shared.BuildingBlocks.BackgroundJobs;
+using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Validation.AspNetCore;
 using Quartz;
 
 namespace MicroservicesCafe.Products.API.Infrastructure.Extensions
@@ -34,16 +36,55 @@ namespace MicroservicesCafe.Products.API.Infrastructure.Extensions
 
             services.AddQuartz(configure =>
             {
-                configure
-                .AddJob<ProcessOutboxMessagesJob<ProductsDbContext>>(jobKey)
-                .AddTrigger(
-                    trigger =>
-                        trigger.ForJob(jobKey)
-                            .WithSimpleSchedule(
-                                schedule =>
-                                    schedule.WithIntervalInSeconds(10)
+                configure.AddJob<ProcessOutboxMessagesJob<ProductsDbContext>>(jobKey)
+                        .AddTrigger(trigger =>
+                            trigger
+                                .ForJob(jobKey)
+                                .WithSimpleSchedule(schedule =>
+                                    schedule
+                                        .WithIntervalInSeconds(10)
                                         .RepeatForever()));
             });
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterOpenIddict(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+        {
+            services.AddOpenIddict()
+                .AddValidation(options =>
+                {
+                    var issuer = configuration["OpenIddict:Issuer"]
+                        ?? throw new InvalidOperationException("Issuer not found.");
+
+                    var audiesnces = configuration["OpenIddict:Audiences"]
+                        ?? throw new InvalidOperationException("Audiences not found.");
+
+                    var encryptionKey = configuration["OpenIddict:EncryptionKey"]
+                        ?? throw new InvalidOperationException("EncryptionKey not found.");
+
+                    options.SetIssuer(issuer);
+                    options.AddAudiences(audiesnces);
+
+                    options.AddEncryptionKey(new SymmetricSecurityKey(Convert.FromBase64String(encryptionKey)));
+
+                    options.UseAspNetCore();
+                    if (!environment.IsDevelopment())
+                    {
+                        options.UseSystemNetHttp();
+                    }
+                    else
+                    {
+                        options.UseSystemNetHttp()
+                               .ConfigureHttpClientHandler(handler =>
+                               {
+                                   handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                               });
+                    }
+                });
+
+            services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
+            services.AddAuthorization();
 
             return services;
         }

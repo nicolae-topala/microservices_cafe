@@ -36,7 +36,7 @@ public static class ServiceExtensions
         return services;
     }
 
-    public static IServiceCollection RegisterOpenIddict(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection RegisterOpenIddict(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         services.AddOpenIddict()
                     .AddCore(options =>
@@ -76,7 +76,21 @@ public static class ServiceExtensions
                     {
                         options.UseLocalServer();
                         options.UseAspNetCore();
+
+                        if (!environment.IsDevelopment())
+                        {
+                            options.UseSystemNetHttp();
+                        }
+                        else
+                        {
+                            options.UseSystemNetHttp()
+                                   .ConfigureHttpClientHandler(handler =>
+                                   {
+                                       handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                                   });
+                        }
                     });
+
         return services;
 
     }

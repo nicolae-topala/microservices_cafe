@@ -1,4 +1,5 @@
-﻿using HotChocolate.Execution;
+﻿using HotChocolate.Authorization;
+using HotChocolate.Execution;
 using MediatR;
 using MicroservicesCafe.Products.Application.Features.Products.Queries.GetProductById;
 using MicroservicesCafe.Products.Shared.DTOs;
@@ -7,6 +8,7 @@ using MicroservicesCafe.Shared.BuildingBlocks.GraphQL;
 namespace MicroservicesCafe.Products.API.Types.Queries;
 
 [QueryType]
+[Authorize]
 public class ProductsQueries()
 {
     public async Task<ProductDto> GetProductById([Service] ISender sender, Guid id)

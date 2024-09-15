@@ -6,18 +6,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddGraphQLServer()
+    .AddAuthorization()
     .AddTypes()
     .AddMutationConventions(applyToAllMutations: true);
-    //.AddDefaultTransactionScopeHandler();
+//.AddDefaultTransactionScopeHandler();
 
 builder.Services
     .RegisterApplicationServices(builder.Configuration)
     .RegisterInfrastructureServices(builder.Configuration)
     .RegisterRabbitMqService(builder.Configuration)
-    .RegisterQuartzService();
+    .RegisterQuartzService()
+    .RegisterOpenIddict(builder.Configuration, builder.Environment);
 
 var app = builder.Build();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapGraphQL();
 
-app.RunWithGraphQLCommands(args);
+await app.RunWithGraphQLCommandsAsync(args)
+    .ConfigureAwait(false);

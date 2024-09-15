@@ -1,9 +1,20 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient("Fusion");
+builder.Services.AddHttpClient("Fusion")
+    .AddHeaderPropagation();
+
+builder.Services.AddHeaderPropagation(options =>
+{
+    options.Headers.Add("GraphQL-Preflight");
+    options.Headers.Add("Authorization");
+});
+
+builder.Services.ConfigureHttpClientDefaults(httpClientBuilder => httpClientBuilder.AddHeaderPropagation());
 
 builder.Services
     .AddFusionGatewayServer()
@@ -28,8 +39,18 @@ builder.Services.AddOpenIddict()
 
         options.AddEncryptionKey(new SymmetricSecurityKey(Convert.FromBase64String(encryptionKey)));
 
-        options.UseSystemNetHttp();
-        options.UseAspNetCore();
+        if (!builder.Environment.IsDevelopment())
+        {
+            options.UseSystemNetHttp();
+        }
+        else
+        {
+            options.UseSystemNetHttp()
+                   .ConfigureHttpClientHandler(handler =>
+                   {
+                       handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                   });
+        }
     });
 
 builder.Services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
@@ -40,6 +61,8 @@ builder.Services
     .AddAuthorization();
 
 var app = builder.Build();
+
+app.UseHeaderPropagation();
 
 app.UseAuthentication();
 app.UseAuthorization();
