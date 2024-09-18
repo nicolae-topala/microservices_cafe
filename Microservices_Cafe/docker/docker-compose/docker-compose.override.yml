@@ -21,7 +21,7 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
 
-  microservicescafe.gateway.api:
+  gateway.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -35,7 +35,7 @@ services:
     extra_hosts:
       - "localhost:172.17.0.1"
 
-  microservicescafe.products.api:
+  products.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8082

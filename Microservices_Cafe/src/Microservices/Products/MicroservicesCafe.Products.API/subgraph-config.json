@@ -1,6 +1,0 @@
-{
-  "subgraph": "Products",
-  "http": {
-    "baseAddress": "http://microservicescafe.products.api:8082/graphql/"
-  }
-}

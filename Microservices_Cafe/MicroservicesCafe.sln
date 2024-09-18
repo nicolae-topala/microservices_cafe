@@ -23,23 +23,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{411978FE-6274-470C-A77F-5369697A3CAA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Gateway.API", "src\Gateway\MicroservicesCafe.Gateway.API\MicroservicesCafe.Gateway.API.csproj", "{DAF9773E-BAEE-4E50-B5A4-BF94F6F24698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gateway.API", "src\Gateway\Gateway.API\Gateway.API.csproj", "{DAF9773E-BAEE-4E50-B5A4-BF94F6F24698}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Products.API", "src\Microservices\Products\MicroservicesCafe.Products.API\MicroservicesCafe.Products.API.csproj", "{51009FAA-B56C-4E20-972E-9C1749C5D4B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.API", "src\Microservices\Products\Products.API\Products.API.csproj", "{51009FAA-B56C-4E20-972E-9C1749C5D4B1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Products.Domain", "src\Microservices\Products\MicroservicesCafe.Products.Domain\MicroservicesCafe.Products.Domain.csproj", "{0B3B81B6-B6A6-4157-89BF-0E4FE75F43BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.Domain", "src\Microservices\Products\Products.Domain\Products.Domain.csproj", "{0B3B81B6-B6A6-4157-89BF-0E4FE75F43BC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Products.Application", "src\Microservices\Products\MicroservicesCafe.Products.Application\MicroservicesCafe.Products.Application.csproj", "{914D452D-9F03-4798-B479-2AC25ABA19A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.Application", "src\Microservices\Products\Products.Application\Products.Application.csproj", "{914D452D-9F03-4798-B479-2AC25ABA19A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Products.Infrastructure", "src\Microservices\Products\MicroservicesCafe.Products.Infrastructure\MicroservicesCafe.Products.Infrastructure.csproj", "{72EEC69D-1005-4F49-BF89-ED3D3D5684A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.Infrastructure", "src\Microservices\Products\Products.Infrastructure\Products.Infrastructure.csproj", "{72EEC69D-1005-4F49-BF89-ED3D3D5684A8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Products.Shared", "src\Microservices\Products\MicroservicesCafe.Products.Shared\MicroservicesCafe.Products.Shared.csproj", "{373CEAA3-9160-456C-95A0-2807683A706B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Products.Shared", "src\Microservices\Products\Products.Shared\Products.Shared.csproj", "{373CEAA3-9160-456C-95A0-2807683A706B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroservicesCafe.Shared", "src\MicroservicesCafe.Shared\MicroservicesCafe.Shared.csproj", "{7CCBA443-ECBD-4671-B56B-27E11BF43BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "src\Shared\Shared.csproj", "{7CCBA443-ECBD-4671-B56B-27E11BF43BAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Auth", "Auth", "{4BED9CE9-8214-4A69-BFA4-23E79F66608E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Server", "src\Auth\Auth.Server\Auth.Server.csproj", "{B7E8D6E7-0816-44D4-BF81-B21DDCD32ECE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth.Server", "src\Auth\Auth.Server\Auth.Server.csproj", "{B7E8D6E7-0816-44D4-BF81-B21DDCD32ECE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

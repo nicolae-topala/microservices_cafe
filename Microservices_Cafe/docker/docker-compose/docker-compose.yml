@@ -18,23 +18,23 @@ services:
     networks:
         - microservicescafe_net
 
-  microservicescafe.gateway.api:
+  gateway.api:
     container_name: gateway_api
     image: ${DOCKER_REGISTRY-}microservicescafegatewayapi
     build:
         context: ../..
-        dockerfile: src/Gateway/MicroservicesCafe.Gateway.API/Dockerfile  
+        dockerfile: src/Gateway/Gateway.API/Dockerfile  
     networks:
         - microservicescafe_net
     depends_on:
         - mssql
 
-  microservicescafe.products.api:
+  products.api:
     container_name: products_api
     image: ${DOCKER_REGISTRY-}microservicescafeproductsapi
     build:
       context: ../..
-      dockerfile: src/Microservices/Products/MicroservicesCafe.Products.API/Dockerfile
+      dockerfile: src/Microservices/Products/Products.API/Dockerfile
     networks:
         - microservicescafe_net
     depends_on:

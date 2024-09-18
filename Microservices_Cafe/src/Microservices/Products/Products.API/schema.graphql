@@ -1,0 +1,79 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type CreateProductPayload {
+  responseOfProductDto: ResponseOfProductDto
+}
+
+type Mutation {
+  createProduct(input: CreateProductInput!): CreateProductPayload!
+}
+
+type Price {
+  ammount: Decimal!
+  currency: CurrencyEnum!
+}
+
+type ProductDto {
+  id: ID!
+  name: String!
+  description: String!
+  price: Price!
+  type: ProductTypeEnum!
+  ingredients: [String]!
+  categoryId: ID!
+}
+
+type Query @authorize {
+  productById(id: UUID!): ResponseOfProductDto!
+}
+
+type ResponseOfProductDto {
+  isSuccessful: String!
+  payload: ProductDto
+  errorCode: String
+  errorMessage: String
+}
+
+input CreateProductDtoInput {
+  name: String!
+  description: String!
+  price: PriceInput!
+  type: ProductTypeEnum!
+  ingredients: [String!]!
+  categoryId: UUID!
+}
+
+input CreateProductInput {
+  product: CreateProductDtoInput!
+}
+
+input PriceInput {
+  ammount: Decimal!
+  currency: CurrencyEnum!
+}
+
+enum ApplyPolicy {
+  BEFORE_RESOLVER
+  AFTER_RESOLVER
+  VALIDATION
+}
+
+enum CurrencyEnum {
+  EUR
+  USD
+}
+
+enum ProductTypeEnum {
+  ONLINE
+  OFFLINE
+}
+
+directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on OBJECT | FIELD_DEFINITION
+
+"The built-in `Decimal` scalar type."
+scalar Decimal
+
+scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

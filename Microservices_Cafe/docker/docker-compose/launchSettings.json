@@ -4,8 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "microservicescafe.products.api": "StartDebugging",
-        "microservices.gateway.api": "StartDebugging",
+        "products.api": "StartDebugging",
+        "gateway.api": "StartDebugging",
         "auth.server": "StartDebugging"
       }
     }

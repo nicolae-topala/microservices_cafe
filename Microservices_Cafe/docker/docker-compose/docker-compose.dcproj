@@ -8,7 +8,7 @@
     <ProjectGuid>fad65f48-be78-4c3d-bad3-3a16ea36f8f5</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>microservicescafe.gateway.api</DockerServiceName>
+    <DockerServiceName>gateway.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">

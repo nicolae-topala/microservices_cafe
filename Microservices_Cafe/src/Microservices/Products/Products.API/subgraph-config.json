@@ -1,0 +1,6 @@
+{
+  "subgraph": "Products",
+  "http": {
+    "baseAddress": "http://products.api:8082/graphql/"
+  }
+}
