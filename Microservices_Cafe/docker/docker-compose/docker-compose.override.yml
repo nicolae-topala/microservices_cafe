@@ -32,8 +32,6 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-    extra_hosts:
-      - "localhost:172.17.0.1"
 
   products.api:
     environment:
@@ -46,8 +44,6 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-    extra_hosts:
-      - "localhost:172.17.0.1"
 
   auth.server:
     environment:

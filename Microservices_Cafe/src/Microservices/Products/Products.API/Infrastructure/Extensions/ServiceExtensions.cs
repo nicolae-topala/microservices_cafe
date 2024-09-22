@@ -1,9 +1,9 @@
 ﻿using MassTransit;
-using Products.Infrastructure;
-using Shared.BuildingBlocks.BackgroundJobs;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
+using Products.Infrastructure;
 using Quartz;
+using Shared.BuildingBlocks.BackgroundJobs;
 
 namespace Products.API.Infrastructure.Extensions
 {
@@ -60,27 +60,33 @@ namespace Products.API.Infrastructure.Extensions
                     var audiesnces = configuration["OpenIddict:Audiences"]
                         ?? throw new InvalidOperationException("Audiences not found.");
 
-                    var encryptionKey = configuration["OpenIddict:EncryptionKey"]
-                        ?? throw new InvalidOperationException("EncryptionKey not found.");
-
                     options.SetIssuer(issuer);
                     options.AddAudiences(audiesnces);
 
+                    var encryptionKey = configuration["OpenIddict:EncryptionKey"]
+                        ?? throw new InvalidOperationException("EncryptionKey not found.");
                     options.AddEncryptionKey(new SymmetricSecurityKey(Convert.FromBase64String(encryptionKey)));
 
-                    options.UseAspNetCore();
-                    if (!environment.IsDevelopment())
-                    {
-                        options.UseSystemNetHttp();
-                    }
-                    else
+                    if (environment.IsDevelopment())
                     {
                         options.UseSystemNetHttp()
                                .ConfigureHttpClientHandler(handler =>
                                {
                                    handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
                                });
+
+                        options.Configure(options =>
+                        {
+                            // internal idp address
+                            options.TokenValidationParameters.ValidIssuers = [ "https://localhost:8085/" ];
+                        });
                     }
+                    else
+                    {
+                        options.UseSystemNetHttp();
+                    }
+
+                    options.UseAspNetCore();
                 });
 
             services.AddAuthentication(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);

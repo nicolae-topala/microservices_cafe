@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Quartz;
+using System.Security.Cryptography.X509Certificates;
 using static OpenIddict.Abstractions.OpenIddictConstants.Permissions;
 
 namespace Auth.Server.Extensions;
@@ -58,12 +59,13 @@ public static class ServiceExtensions
                         options.AllowAuthorizationCodeFlow();
 
                         var encryptionKey = configuration.GetValue<string>("EncryptionKey")
-                            ?? throw new InvalidOperationException("Encryption Key not found.");
+                                ?? throw new InvalidOperationException("Encryption Key not found.");
                         options.AddEncryptionKey(new SymmetricSecurityKey(
                             Convert.FromBase64String(encryptionKey)));
 
-                        options.AddDevelopmentEncryptionCertificate()
-                               .AddDevelopmentSigningCertificate();
+                        var certificates = configuration.GetSection("OpenIddictCertificates").Get<IdentityCertificates>()
+                                ?? throw new InvalidOperationException("Certificates not found.");
+                        options.AddRequiredCertificates(certificates);
 
                         options.UseAspNetCore()
                                .EnableAuthorizationEndpointPassthrough()
@@ -71,28 +73,19 @@ public static class ServiceExtensions
                                .EnableTokenEndpointPassthrough()
                                .EnableUserinfoEndpointPassthrough()
                                .EnableStatusCodePagesIntegration();
-                    })
-                    .AddValidation(options =>
-                    {
-                        options.UseLocalServer();
-                        options.UseAspNetCore();
-
-                        if (!environment.IsDevelopment())
-                        {
-                            options.UseSystemNetHttp();
-                        }
-                        else
-                        {
-                            options.UseSystemNetHttp()
-                                   .ConfigureHttpClientHandler(handler =>
-                                   {
-                                       handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-                                   });
-                        }
                     });
-
         return services;
+    }
 
+    private static OpenIddictServerBuilder AddRequiredCertificates(
+        this OpenIddictServerBuilder builder,
+        IdentityCertificates certificates)
+    {
+        var signingCertBytes =
+            File.ReadAllBytes($"{certificates.Path}/{certificates.SigningCertificate.Thumbprint}{certificates.CertExtension}");
+        builder.AddSigningCertificate(new X509Certificate2(signingCertBytes, certificates.Password));
+
+        return builder;
     }
 }
 

@@ -1,8 +1,6 @@
 using Products.API.Infrastructure.Extensions;
-using Products.API.Types;
 using Products.Application;
 using Products.Infrastructure;
-using Products.Shared.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
