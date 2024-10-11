@@ -16,7 +16,7 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
             .ConfigureAwait(false);
 
         var scopeManager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
-        var apiScope = await scopeManager.FindByNameAsync("gateway_api", cancellationToken)
+        var apiScope = await scopeManager.FindByNameAsync("products_api_scope", cancellationToken)
             .ConfigureAwait(false);
 
         if (apiScope != null)

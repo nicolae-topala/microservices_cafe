@@ -74,12 +74,6 @@ namespace Products.API.Infrastructure.Extensions
                                {
                                    handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
                                });
-
-                        options.Configure(options =>
-                        {
-                            // internal idp address
-                            options.TokenValidationParameters.ValidIssuers = [ "https://localhost:8085/" ];
-                        });
                     }
                     else
                     {
