@@ -3,20 +3,81 @@
   mutation: Mutation
 }
 
-type CreateProductPayload {
-  responseOfProductDto: ResponseOfProductDto
+"A connection to a list of items."
+type CategoriesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [CategoriesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Category!]
 }
 
-type Mutation {
+"An edge in a connection."
+type CategoriesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Category!
+}
+
+type Category {
+  edit(name: String!): ResultOfCategory!
+  name: String!
+  id: UUID!
+}
+
+type CreateCategoryPayload {
+  category: Category
+}
+
+type CreateProductPayload {
+  product: Product
+}
+
+type DeleteCategoryPayload {
+  boolean: Boolean
+}
+
+type EditCategoryPayload {
+  category: Category
+}
+
+type EditProductPayload {
+  product: Product
+}
+
+type Error {
+  code: String!
+  message: String!
+}
+
+type Mutation @authorize @authorize {
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload!
+  editCategory(input: EditCategoryInput!): EditCategoryPayload!
+  deleteCategory(input: DeleteCategoryInput!): DeleteCategoryPayload!
   createProduct(input: CreateProductInput!): CreateProductPayload!
+  editProduct(input: EditProductInput!): EditProductPayload!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
 }
 
 type Price {
-  ammount: Decimal!
+  amount: Decimal!
   currency: CurrencyEnum!
 }
 
-type ProductDto {
+type Product {
   id: ID!
   name: String!
   description: String!
@@ -24,23 +85,70 @@ type ProductDto {
   type: ProductTypeEnum!
   ingredients: [String]!
   categoryId: ID!
+  isVisible: Boolean!
+  isInStock: Boolean!
 }
 
-type Query @authorize {
-  productById(id: UUID!): ResponseOfProductDto!
+"A connection to a list of items."
+type ProductsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ProductsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Product!]
 }
 
-type ResponseOfProductDto {
-  isSuccessful: String!
-  payload: ProductDto
-  errorCode: String
-  errorMessage: String
+"An edge in a connection."
+type ProductsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Product!
+}
+
+type Query {
+  categories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput order: [CategorySortInput!]): CategoriesConnection
+  products("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ProductFilterInput order: [ProductSortInput!]): ProductsConnection
+}
+
+type ResultOfCategory {
+  value: Category!
+  error: Error!
+  isSuccess: Boolean!
+  isFailure: Boolean!
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input CategoryFilterInput {
+  and: [CategoryFilterInput!]
+  or: [CategoryFilterInput!]
+  name: StringOperationFilterInput
+  id: UuidOperationFilterInput
+}
+
+input CategorySortInput {
+  name: SortEnumType
+  id: SortEnumType
+}
+
+input CreateCategoryDtoInput {
+  name: String!
+}
+
+input CreateCategoryInput {
+  category: CreateCategoryDtoInput!
 }
 
 input CreateProductDtoInput {
   name: String!
   description: String!
-  price: PriceInput!
+  price: Decimal!
+  currency: CurrencyEnum!
   type: ProductTypeEnum!
   ingredients: [String!]!
   categoryId: UUID!
@@ -50,9 +158,137 @@ input CreateProductInput {
   product: CreateProductDtoInput!
 }
 
-input PriceInput {
-  ammount: Decimal!
-  currency: CurrencyEnum!
+input CurrencyEnumOperationFilterInput {
+  eq: CurrencyEnum
+  neq: CurrencyEnum
+  in: [CurrencyEnum!]
+  nin: [CurrencyEnum!]
+}
+
+input DecimalOperationFilterInput {
+  eq: Decimal
+  neq: Decimal
+  in: [Decimal]
+  nin: [Decimal]
+  gt: Decimal
+  ngt: Decimal
+  gte: Decimal
+  ngte: Decimal
+  lt: Decimal
+  nlt: Decimal
+  lte: Decimal
+  nlte: Decimal
+}
+
+input DeleteCategoryInput {
+  categoryId: UUID!
+}
+
+input EditCategoryDtoInput {
+  id: UUID!
+  name: String!
+}
+
+input EditCategoryInput {
+  category: EditCategoryDtoInput!
+}
+
+input EditProductDtoInput {
+  id: UUID!
+  name: String
+  description: String
+  price: Decimal
+  currency: CurrencyEnum
+  type: ProductTypeEnum
+  ingredients: [String!]
+  categoryId: UUID
+  isVisible: Boolean
+  isInStock: Boolean
+}
+
+input EditProductInput {
+  product: EditProductDtoInput!
+}
+
+input ListStringOperationFilterInput {
+  all: StringOperationFilterInput
+  none: StringOperationFilterInput
+  some: StringOperationFilterInput
+  any: Boolean
+}
+
+input PriceFilterInput {
+  and: [PriceFilterInput!]
+  or: [PriceFilterInput!]
+  amount: DecimalOperationFilterInput
+  currency: CurrencyEnumOperationFilterInput
+}
+
+input PriceSortInput {
+  amount: SortEnumType
+  currency: SortEnumType
+}
+
+input ProductFilterInput {
+  and: [ProductFilterInput!]
+  or: [ProductFilterInput!]
+  name: StringOperationFilterInput
+  description: StringOperationFilterInput
+  price: PriceFilterInput
+  type: ProductTypeEnumOperationFilterInput
+  ingredients: ListStringOperationFilterInput
+  categoryId: UuidOperationFilterInput
+  isVisible: BooleanOperationFilterInput
+  isInStock: BooleanOperationFilterInput
+  id: UuidOperationFilterInput
+}
+
+input ProductSortInput {
+  name: SortEnumType
+  description: SortEnumType
+  price: PriceSortInput
+  type: SortEnumType
+  categoryId: SortEnumType
+  isVisible: SortEnumType
+  isInStock: SortEnumType
+  id: SortEnumType
+}
+
+input ProductTypeEnumOperationFilterInput {
+  eq: ProductTypeEnum
+  neq: ProductTypeEnum
+  in: [ProductTypeEnum!]
+  nin: [ProductTypeEnum!]
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input UuidOperationFilterInput {
+  eq: UUID
+  neq: UUID
+  in: [UUID]
+  nin: [UUID]
+  gt: UUID
+  ngt: UUID
+  gte: UUID
+  ngte: UUID
+  lt: UUID
+  nlt: UUID
+  lte: UUID
+  nlte: UUID
 }
 
 enum ApplyPolicy {
@@ -69,6 +305,11 @@ enum CurrencyEnum {
 enum ProductTypeEnum {
   ONLINE
   OFFLINE
+}
+
+enum SortEnumType {
+  ASC
+  DESC
 }
 
 directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on OBJECT | FIELD_DEFINITION

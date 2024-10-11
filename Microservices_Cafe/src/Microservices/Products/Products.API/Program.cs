@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddGraphQLServer()
+    .AddFiltering()
+    .AddSorting()
     .AddAuthorization()
     .AddTypes()
     .AddMutationConventions(applyToAllMutations: true);

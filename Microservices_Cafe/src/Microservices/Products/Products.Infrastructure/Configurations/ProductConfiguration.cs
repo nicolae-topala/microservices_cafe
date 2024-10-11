@@ -31,6 +31,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder
+            .Property(x => x.IsVisible)
+            .IsRequired();
+
+        builder
+            .Property(x => x.IsInStock)
+            .IsRequired();
+
+        builder
             .HasOne<Category>()
             .WithMany()
             .HasForeignKey(x => x.CategoryId)

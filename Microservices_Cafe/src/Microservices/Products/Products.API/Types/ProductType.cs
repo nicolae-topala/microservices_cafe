@@ -1,12 +1,14 @@
-using Products.Shared.DTOs;
+using Products.Domain.Entities;
 using Shared.Enums;
 
 namespace Products.API.Types;
 
-public class ProductType : ObjectType<ProductDto>
+public class ProductType : ObjectType<Product>
 {
-    protected override void Configure(IObjectTypeDescriptor<ProductDto> descriptor)
+    protected override void Configure(IObjectTypeDescriptor<Product> descriptor)
     {
+        descriptor.BindFieldsExplicitly();
+
         descriptor.Field(p => p.Id)
             .Type<NonNullType<IdType>>();
 
@@ -27,5 +29,11 @@ public class ProductType : ObjectType<ProductDto>
 
         descriptor.Field(p => p.CategoryId)
             .Type<NonNullType<IdType>>();
+
+        descriptor.Field(p => p.IsVisible)
+            .Type<NonNullType<BooleanType>>();
+
+        descriptor.Field(p => p.IsInStock)
+            .Type<NonNullType<BooleanType>>();
     }
 }

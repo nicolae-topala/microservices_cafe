@@ -27,11 +27,11 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
 
         await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
         {
-            DisplayName = "Gateway API scope",
-            Name = "gateway_api",
+            DisplayName = "Products API scope",
+            Name = "products_api_scope",
             Resources =
             {
-               "gateway_server"
+               "products_api"
             }
         }, cancellationToken).ConfigureAwait(false);
 
@@ -70,7 +70,7 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
                     Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
-                    Permissions.Prefixes.Scope + "gateway_api"
+                    Permissions.Prefixes.Scope + "products_api_scope"
                 },
             Requirements =
             {

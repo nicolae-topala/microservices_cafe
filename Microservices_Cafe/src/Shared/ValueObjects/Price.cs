@@ -7,28 +7,41 @@ namespace Shared.ValueObjects;
 
 public sealed class Price : ValueObject
 {
-    public decimal Ammount { get; private set; }
+    public decimal Amount { get; private set; }
     public CurrencyEnum Currency { get; private set; }
 
-    private Price(decimal ammount, CurrencyEnum currency)
+    private Price(decimal amount, CurrencyEnum currency)
     {
-        Ammount = ammount;
+        Amount = amount;
         Currency = currency;
     }
 
-    public static Result<Price> Create(decimal ammount, CurrencyEnum currency)
+    public static Result<Price> Create(decimal amount, CurrencyEnum currency)
     {
-        if (ammount < 0)
+        if (amount < 0m)
         {
-            return Result.Failure<Price>(PriceErrors.NegativeAmmount);
+            return Result.Failure<Price>(PriceErrors.NegativeAmount);
         }
+        return Result.Create(new Price(amount, currency));
+    }
 
-        return new Price(ammount, currency);
+    public Result Edit(decimal? amount, CurrencyEnum? currency)
+    {
+        if (amount.HasValue && amount < 0m)
+            return Result.Failure<Price>(PriceErrors.NegativeAmount);
+
+        if (amount.HasValue && amount != Amount)
+            Amount = amount.Value;
+
+        if (currency.HasValue && currency != Currency)
+            Currency = currency.Value;
+
+        return Result.Success();
     }
 
     public override IEnumerable<object> GetAtomicValues()
     {
-        yield return Ammount;
+        yield return Amount;
         yield return Currency;
     }
 }

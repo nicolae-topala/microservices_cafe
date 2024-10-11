@@ -4,5 +4,5 @@ namespace Shared.Errors;
 
 public static class PriceErrors
 {
-    public static readonly Error NegativeAmmount = new("Error.Price.NegativeAmmount", "The ammount of a price can not be negative.");
+    public static readonly Error NegativeAmount = new("Error.Price.NegativeAmount", "The amount of a price can not be negative.");
 }

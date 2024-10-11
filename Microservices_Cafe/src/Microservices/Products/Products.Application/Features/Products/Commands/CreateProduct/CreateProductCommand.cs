@@ -1,10 +1,9 @@
-﻿using MediatR;
+﻿using Products.Domain.Entities;
 using Products.Shared.DTOs;
 using Shared.Abstractions.Messaging;
-using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Products.Commands.CreateProduct;
 
-public record CreateProductCommand(CreateProductDto Product) : ICommand<ProductDto>
+public record CreateProductCommand(CreateProductDto Product) : ICommand<Product>
 {
 }

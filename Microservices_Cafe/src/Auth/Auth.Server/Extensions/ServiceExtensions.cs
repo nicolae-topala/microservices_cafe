@@ -63,9 +63,16 @@ public static class ServiceExtensions
                         options.AddEncryptionKey(new SymmetricSecurityKey(
                             Convert.FromBase64String(encryptionKey)));
 
-                        var certificates = configuration.GetSection("OpenIddictCertificates").Get<IdentityCertificates>()
-                                ?? throw new InvalidOperationException("Certificates not found.");
-                        options.AddRequiredCertificates(certificates);
+                        if (environment.IsDevelopment())
+                        {
+                            options.AddDevelopmentSigningCertificate();
+                        }
+                        else
+                        {
+                            var certificates = configuration.GetSection("OpenIddictCertificates").Get<IdentityCertificates>()
+                                    ?? throw new InvalidOperationException("Certificates not found.");
+                            options.AddRequiredCertificates(certificates);
+                        }
 
                         options.UseAspNetCore()
                                .EnableAuthorizationEndpointPassthrough()
