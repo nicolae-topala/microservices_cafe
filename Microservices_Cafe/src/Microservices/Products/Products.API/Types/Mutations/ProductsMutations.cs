@@ -5,6 +5,8 @@ using Products.Application.Features.Products.Commands.DeleteProduct;
 using Products.Application.Features.Products.Commands.EditProduct;
 using Products.Domain.Entities;
 using Products.Shared.DTOs;
+using Shared.BuildingBlocks.Result;
+using Shared.Helpers.Hotchocolate;
 
 namespace Products.API.Types.Mutations;
 
@@ -12,19 +14,15 @@ namespace Products.API.Types.Mutations;
 [Authorize]
 public class ProductsMutations
 {
-    public async Task<Product> CreateProduct([Service] ISender sender, CreateProductDto product)
-    {
-        var result = await sender.Send(new CreateProductCommand(product));
-        return result.Value;
-    }
+    [Error<ResultError>]
+    public async Task<FieldResult<Product>> CreateProduct(ISender sender, CreateProductDto product) =>
+        ResultHandler.HandleResponse(await sender.Send(new CreateProductCommand(product)));
 
-    public async Task<Product> EditProduct([Service] ISender sender, EditProductDto product)
-    {
-        var result = await sender.Send(new EditProductCommand(product));
-        return result.Value;
-    }
+    [Error<ResultError>]
+    public async Task<FieldResult<Product>> EditProduct(ISender sender, EditProductDto product) => 
+        ResultHandler.HandleResponse(await sender.Send(new EditProductCommand(product)));
 
-    public async Task DeleteProduct([Service] ISender sender, Guid productId) =>
-        await sender.Send(new DeleteProductCommand(productId));
+    [Error<ResultError>]
+    public async Task<FieldResult<bool>> DeleteProduct([Service] ISender sender, Guid productId) =>
+        ResultHandler.HandleResponse(await sender.Send(new DeleteProductCommand(productId)));
 }
-

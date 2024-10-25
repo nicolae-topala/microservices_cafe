@@ -8,7 +8,7 @@ public class Result<T> : Result
         ? _value!
         : throw new InvalidOperationException("The value of a failure result can not be accessed.");
 
-    protected internal Result(T? value, bool isSuccess, Error error) : base(isSuccess, error) =>
+    protected internal Result(T? value, bool isSuccess, ResultError error) : base(isSuccess, error) =>
         _value = value;
 
     public static implicit operator Result<T>(T? value) => Create(value);

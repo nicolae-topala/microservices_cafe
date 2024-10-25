@@ -18,7 +18,7 @@ public class DeleteProductCommandHandler(IProductsDbContext dbContext)
 
         if (product is null)
         {
-            return Result.Failure(new Error("", ""));
+            return Result.Failure(new ResultError("", ""));
         }
 
         dbContext.Products.Remove(product);

@@ -27,8 +27,8 @@ public class ProductType : ObjectType<Product>
         descriptor.Field(p => p.Ingredients)
             .Type<NonNullType<ListType<StringType>>>();
 
-        descriptor.Field(p => p.CategoryId)
-            .Type<NonNullType<IdType>>();
+        descriptor.Field(p => p.Categories)
+            .Type<NonNullType<ListType<CategoryType>>>();
 
         descriptor.Field(p => p.IsVisible)
             .Type<NonNullType<BooleanType>>();

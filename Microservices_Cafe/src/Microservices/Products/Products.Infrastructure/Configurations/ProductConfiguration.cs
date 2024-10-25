@@ -15,10 +15,12 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder
             .Property(x => x.Name)
+            .HasMaxLength(256)
             .IsRequired();
 
         builder
             .Property(x => x.Description)
+            .HasMaxLength(2000)
             .IsRequired();
 
         builder.ComplexProperty(x => x.Price, y => 
@@ -39,9 +41,11 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
 
         builder
-            .HasOne<Category>()
-            .WithMany()
-            .HasForeignKey(x => x.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasMany(x => x.Categories)
+            .WithMany(c => c.Products);
+
+        builder
+            .HasIndex(x => x.Name)
+            .IsUnique();
     }
 }

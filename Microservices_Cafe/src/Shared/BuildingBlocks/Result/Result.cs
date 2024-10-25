@@ -3,28 +3,28 @@
 namespace Shared.BuildingBlocks.Result;
 public class Result
 {
-    public Error Error { get; }
+    public ResultError Error { get; }
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
 
-    public static Result Success() => new(true, Error.None);
-    public static Result<T> Success<T>(T value) => new(value, true, Error.None);
+    public static Result Success() => new(true, ResultError.None);
+    public static Result<T> Success<T>(T value) => new(value, true, ResultError.None);
 
-    public static Result Failure(Error error) => new(false, error);
-    public static Result<T> Failure<T>(Error error) => new(default!, false, error);
+    public static Result Failure(ResultError error) => new(false, error);
+    public static Result<T> Failure<T>(ResultError error) => new(default!, false, error);
 
     public static Result<T> Create<T>(T? value) => value is not null ? Success(value) : Failure<T>(CommonErrors.NullValue);
 
-    protected Result(bool isSuccess, Error error)
+    protected Result(bool isSuccess, ResultError error)
     {
         // Successful must not have an error
-        if (isSuccess && error != Error.None)
+        if (isSuccess && error != ResultError.None)
         {
             throw new InvalidOperationException();
         }
 
-        // Failed mush have an error
-        if (!isSuccess && error == Error.None)
+        // Failed must have an error
+        if (!isSuccess && error == ResultError.None)
         {
             throw new InvalidOperationException();
         }

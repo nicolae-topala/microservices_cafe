@@ -9,4 +9,4 @@ public record CreateProductDto(
     CurrencyEnum Currency,
     ProductTypeEnum Type,
     List<string> Ingredients,
-    Guid CategoryId);
+    List<Guid> CategoryIds);

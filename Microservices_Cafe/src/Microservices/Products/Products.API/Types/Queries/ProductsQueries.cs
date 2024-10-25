@@ -10,9 +10,10 @@ public class ProductsQueries
     [UsePaging]
     [UseFiltering]
     [UseSorting]
-    public async Task<IQueryable<Product>> GetProducts([Service] ISender sender)
+    public Task<IQueryable<Product>> GetProducts(ISender sender)
     {
-        var result = await sender.Send(new GetProductsQuery());
-        return result.Value;
+        var result = sender.Send(new GetProductsQuery())
+            .ContinueWith(t => t.Result.Value);
+        return result;
     }
 }

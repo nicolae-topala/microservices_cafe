@@ -16,7 +16,7 @@ public class EditProductCommandHandler(IProductsDbContext dbContext)
 
         if (product is null)
         {
-            return Result.Failure<Product>(new Error("", ""));
+            return Result.Failure<Product>(new ResultError("", ""));
         }
 
         var productResult = product.Edit(

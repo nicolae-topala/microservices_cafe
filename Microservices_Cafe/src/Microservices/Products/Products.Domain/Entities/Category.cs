@@ -1,53 +1,71 @@
-﻿using Shared.BuildingBlocks.Result;
+﻿using Products.Shared.Errors;
+using Shared.BuildingBlocks.Result;
 using Shared.Primitives;
 
 namespace Products.Domain.Entities;
 
 public sealed class Category : BaseEntity
 {
+    private readonly List<Category> _subCategories = [];
+    private readonly List<Product> _products = [];
+
     public string Name { get; private set; }
+    public Category? ParentCategory { get; private set; }
+    public IReadOnlyCollection<Product> Products => _products;
+    public IReadOnlyCollection<Category>? SubCategories => _subCategories;
 
     private Category() { }
 
-    private Category(string name) : base()
+    private Category(string name, Category? parentCategory = null) : base()
     {
         Name = name;
+        ParentCategory = parentCategory;
     }
 
-    public static Result<Category> Create(string name)
+    public static Result<Category> Create(string name, Category? parentCategory = null)
     {
-        var nameMaxLength = 64;
-        var trimmedName = name.Trim();
+        var category = new Category(name, parentCategory);
 
-        if (string.IsNullOrWhiteSpace(trimmedName))
+        if (parentCategory is not null)
         {
-            return Result.Failure<Category>(new Error("", ""));
+            parentCategory.AddSubCategory(category);
         }
 
-        if (trimmedName.Length > nameMaxLength)
-        {
-            return Result.Failure<Category>(new Error("", ""));
-        }
-
-        return Result.Success(new Category(trimmedName));
+        return Result.Success(category);
     }
 
     public Result<Category> Edit(string name)
     {
-        var nameMaxLength = 64;
-        var trimmedName = name.Trim();
+        Name = name;
 
-        if (string.IsNullOrWhiteSpace(trimmedName))
+        return Result.Success(this);
+    }
+
+    public Result<Category> AddSubCategory(Category subCategory)
+    {
+        if (subCategory is null)
         {
-            return Result.Failure<Category>(new Error("", ""));
+            return Result.Failure<Category>(CategoryErrors.NullSubcategoryValue);
         }
 
-        if (trimmedName.Length > nameMaxLength)
+        if (subCategory == this)
         {
-            return Result.Failure<Category>(new Error("", ""));
+            return Result.Failure<Category>(CategoryErrors.SelfPointing);
         }
 
-        Name = trimmedName;
+        _subCategories.Add(subCategory);
+
+        return Result.Success(this);
+    }
+
+    public Result<Category> RemoveSubCategory(Category subCategory)
+    {
+        if (subCategory is null)
+        {
+            return Result.Failure<Category>(CategoryErrors.NullSubcategoryValue);
+        }
+
+        _subCategories.Remove(subCategory);
 
         return Result.Success(this);
     }

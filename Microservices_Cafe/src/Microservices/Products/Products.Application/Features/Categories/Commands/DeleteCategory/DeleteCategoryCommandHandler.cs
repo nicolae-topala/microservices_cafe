@@ -18,7 +18,7 @@ public class DeleteCategoryCommandHandler(IProductsDbContext dbContext)
 
         if (category is null)
         {
-            return Result.Failure<bool>(new Error("", ""));
+            return Result.Failure<bool>(new ResultError("", ""));
         }
 
         dbContext.Categories.Remove(category);

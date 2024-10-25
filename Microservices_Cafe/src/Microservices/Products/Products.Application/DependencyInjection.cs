@@ -3,6 +3,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Products.Application.Abstractions.Behaviors;
 using System.Reflection;
 
 namespace Products.Application
@@ -16,7 +17,10 @@ namespace Products.Application
             IConfiguration configuration)
         {
             services.AddMediatR(configuration =>
-                configuration.RegisterServicesFromAssembly(currentAssembly));
+            {
+                configuration.RegisterServicesFromAssembly(currentAssembly);
+                configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
 
             services.AddValidatorsFromAssembly(currentAssembly);
 

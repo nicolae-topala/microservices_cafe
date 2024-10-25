@@ -1,4 +1,5 @@
-﻿using Products.Application.Abstractions;
+﻿using Microsoft.EntityFrameworkCore;
+using Products.Application.Abstractions;
 using Products.Domain.Entities;
 using Shared.Abstractions.Messaging;
 using Shared.BuildingBlocks.Result;
@@ -20,12 +21,16 @@ public class DeleteProductCommandHandler(IProductsDbContext dbContext)
             return Result.Failure<Product>(price.Error);
         }
 
+        var categories = await dbContext.Categories
+            .Where(x => request.Product.CategoryIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
         var productResult = Product.Create(
             request.Product.Name,
             request.Product.Description,
             price.Value,
             request.Product.Type,
-            request.Product.CategoryId);
+            categories);
 
         if (productResult.IsFailure)
         {

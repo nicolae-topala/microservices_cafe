@@ -16,7 +16,7 @@ public class EditCategoryCommandHandler(IProductsDbContext dbContext)
 
         if(category is null)
         {
-            return Result.Failure<Category>(new Error("",""));
+            return Result.Failure<Category>(new ResultError("",""));
         }
 
         var categoryResult = category.Edit(request.Category.Name);

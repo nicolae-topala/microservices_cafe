@@ -15,12 +15,20 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         builder
             .Property(x => x.Name)
+            .HasMaxLength(64)
             .IsRequired();
 
         builder
-            .HasMany<Product>()
-            .WithOne()
-            .HasForeignKey(x => x.CategoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasMany(x => x.Products)
+            .WithMany(x => x.Categories);
+
+        builder
+           .HasMany(c => c.SubCategories)
+           .WithOne(c => c.ParentCategory)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasIndex(x => x.Name)
+            .IsUnique();
     }
 }

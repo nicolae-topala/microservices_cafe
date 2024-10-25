@@ -5,9 +5,10 @@ using Shared.Abstractions.Messaging;
 using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Products.Queries.GetProducts;
+
 public class GetProductsQueryHandler(IProductsDbContext dbContext)
     : IQueryHandler<GetProductsQuery, IQueryable<Product>>
 {
-    public async Task<Result<IQueryable<Product>>> Handle(GetProductsQuery request, CancellationToken cancellationToken) =>
-        Result.Create(dbContext.Products.AsNoTracking());
+    public Task<Result<IQueryable<Product>>> Handle(GetProductsQuery request, CancellationToken cancellationToken) =>
+        Task.FromResult(Result.Create(dbContext.Products.AsNoTracking()));
 }
