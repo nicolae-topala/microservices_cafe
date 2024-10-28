@@ -23,6 +23,6 @@ public class ProductsMutations
         ResultHandler.HandleResponse(await sender.Send(new EditProductCommand(product)));
 
     [Error<ResultError>]
-    public async Task<FieldResult<bool>> DeleteProduct([Service] ISender sender, Guid productId) =>
+    public async Task<FieldResult<bool>> DeleteProduct(ISender sender, Guid productId) =>
         ResultHandler.HandleResponse(await sender.Send(new DeleteProductCommand(productId)));
 }

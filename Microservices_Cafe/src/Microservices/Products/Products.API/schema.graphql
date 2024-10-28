@@ -35,6 +35,7 @@ type Category {
 
 type CreateCategoryPayload {
   category: Category
+  errors: [CreateCategoryError!]
 }
 
 type CreateProductPayload {
@@ -44,6 +45,7 @@ type CreateProductPayload {
 
 type DeleteCategoryPayload {
   boolean: Boolean
+  errors: [DeleteCategoryError!]
 }
 
 type DeleteProductPayload {
@@ -53,6 +55,7 @@ type DeleteProductPayload {
 
 type EditCategoryPayload {
   category: Category
+  errors: [EditCategoryError!]
 }
 
 type EditProductPayload {
@@ -126,9 +129,15 @@ type ResultError implements Error {
   message: String!
 }
 
+union CreateCategoryError = ResultError
+
 union CreateProductError = ResultError
 
+union DeleteCategoryError = ResultError
+
 union DeleteProductError = ResultError
+
+union EditCategoryError = ResultError
 
 union EditProductError = ResultError
 

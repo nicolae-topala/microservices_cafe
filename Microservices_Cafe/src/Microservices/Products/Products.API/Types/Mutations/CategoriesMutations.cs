@@ -5,6 +5,8 @@ using Products.Application.Features.Categories.Commands.DeleteCategory;
 using Products.Application.Features.Categories.Commands.EditCategory;
 using Products.Domain.Entities;
 using Products.Shared.DTOs;
+using Shared.BuildingBlocks.Result;
+using Shared.Helpers.Hotchocolate;
 
 namespace Products.API.Types.Mutations;
 
@@ -12,21 +14,15 @@ namespace Products.API.Types.Mutations;
 [Authorize]
 public class CategoriesMutations
 {
-    public async Task<Category> CreateCategory(ISender sender, CreateCategoryDto category)
-    {
-        var result = await sender.Send(new CreateCategoryCommand(category));
-        return result.Value;
-    }
+    [Error<ResultError>]
+    public async Task<FieldResult<Category>> CreateCategory(ISender sender, CreateCategoryDto category) =>
+        ResultHandler.HandleResponse(await sender.Send(new CreateCategoryCommand(category)));
 
-    public async Task<Category> EditCategory(ISender sender, EditCategoryDto category)
-    {
-        var result = await sender.Send(new EditCategoryCommand(category));
-        return result.Value;
-    }
+    [Error<ResultError>]
+    public async Task<FieldResult<Category>> EditCategory(ISender sender, EditCategoryDto category) =>
+        ResultHandler.HandleResponse(await sender.Send(new EditCategoryCommand(category)));
 
-    public async Task<bool> DeleteCategory(ISender sender, Guid categoryId)
-    {
-        var result = await sender.Send(new DeleteCategoryCommand(categoryId));
-        return result.Value;
-    }
+    [Error<ResultError>]
+    public async Task<FieldResult<bool>> DeleteCategory(ISender sender, Guid categoryId) =>
+        ResultHandler.HandleResponse(await sender.Send(new DeleteCategoryCommand(categoryId)));
 }

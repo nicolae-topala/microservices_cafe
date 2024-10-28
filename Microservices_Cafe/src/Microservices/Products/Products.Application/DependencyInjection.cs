@@ -3,7 +3,7 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Products.Application.Abstractions.Behaviors;
+using Shared.Abstractions.Behaviors;
 using System.Reflection;
 
 namespace Products.Application

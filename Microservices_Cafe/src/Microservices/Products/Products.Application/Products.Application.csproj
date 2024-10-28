@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Abstractions\Behaviors\" />
     <Folder Include="Abstractions\Repositories\" />
   </ItemGroup>
 
