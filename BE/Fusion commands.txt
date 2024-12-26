@@ -1,0 +1,13 @@
+// Create subgraph config
+dotnet fusion subgraph config set http --url http://localhost:8086 -w ./src/Microservices/User/User.API
+
+// Generate schema
+dotnet run --project ./src/Microservices/Products/Products.API -- schema export --output schema.graphql
+dotnet run --project ./src/Microservices/User/User.API -- schema export --output schema.graphql
+
+// Pack subgraph
+dotnet fusion subgraph pack -w ./src/Microservices/Products/Products.API
+dotnet fusion subgraph pack -w ./src/Microservices/User/User.API
+
+// Compose
+dotnet fusion compose -p ./src/Gateway/Gateway.API/gateway -s ./src/Microservices/Products/Products.API -s ./src/Microservices/User/User.API
