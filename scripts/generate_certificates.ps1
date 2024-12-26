@@ -12,6 +12,14 @@ Write-Host "=================================================="
 $exportDir = "..\BE\certificates\"
 $exportCrt = "localhost.crt"
 
+# Create the directory if it does not exist
+if (-not (Test-Path -Path $exportDir)) {
+    New-Item -ItemType Directory -Path $exportDir -Force
+    Write-Host "Directory created: $exportDir"
+} else {
+    Write-Host "Directory already exists: $exportDir"
+}
+
 # ----------------------------------------------------------------------------
 # 2. Generate and trust a new dev certificate
 # ----------------------------------------------------------------------------
