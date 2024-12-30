@@ -1,18 +1,3 @@
-<#
-.SYNOPSIS
-    Generates schemas, packs subgraphs, and composes the gateway for multiple microservices
-    using HotChocolate Fusion.
-
-.DESCRIPTION
-    1. Checks if .NET is available.
-    2. Checks (and installs, if needed) the hotchocolate.fusion.commandline tool.
-    3. Iterates over each API to:
-       - Generate the schema via `dotnet run --project ... -- schema export ...`
-       - Pack the subgraph via `dotnet fusion subgraph pack ...`
-    4. Composes the gateway via `dotnet fusion compose -p ... -s ...`
-    5. Aborts if any external command fails (exit code != 0).
-#>
-
 [CmdletBinding()]
 param (
     [Parameter(Mandatory=$false)]
@@ -30,41 +15,15 @@ param (
 # Make sure that any error in a PowerShell cmdlet stops execution
 $ErrorActionPreference = 'Stop'
 
-Write-Host "-----------------------------------------"
-Write-Host "Checking if .NET is installed..."
-Write-Host "-----------------------------------------"
-try {
-    # If this fails, .NET is not installed or not on PATH
-    dotnet --list-sdks | Out-Null
-    Write-Host ".NET is installed."
-}
-catch {
-    Write-Error "It appears .NET is not installed or not on the PATH."
-    exit 1
-}
-
 Write-Host "`n-----------------------------------------"
-Write-Host "Checking hotchocolate.fusion.commandline..."
+Write-Host "Restore tools..."
 Write-Host "-----------------------------------------"
-# Check if hotchocolate.fusion.commandline is installed
-$toolList = & dotnet tool list -g
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Failed to check global .NET tools."
-    exit 1
-}
 
-if (-not ($toolList | Select-String -SimpleMatch "hotchocolate.fusion.commandline")) {
-    Write-Host "Not installed. Installing globally..."
-    & dotnet tool install --global hotchocolate.fusion.commandline
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "Failed to install hotchocolate.fusion.commandline"
+dotnet tool restore
+if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to restore tools"
         exit 1
     }
-    Write-Host "hotchocolate.fusion.commandline installed successfully."
-}
-else {
-    Write-Host "hotchocolate.fusion.commandline is already installed."
-}
 
 Write-Host "`n-----------------------------------------"
 Write-Host "Starting schema generation and subgraph packing..."
@@ -112,7 +71,7 @@ foreach ($API in $APIs) {
     $composeArgs += @("-s", $API.Path)
 }
 
-Write-Host "Running: dotnet $($composeArgs -join ' ')"
+Write-Host "Running: dotnet $composeArgs"
 
 # Call dotnet + the subcommand, passing the array as separate arguments
 & dotnet $composeArgs

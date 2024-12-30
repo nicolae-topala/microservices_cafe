@@ -9,7 +9,7 @@ Write-Host "=================================================="
 # 1. Configuration
 # --------------------------------------------------
 
-$exportDir = "..\BE\certificates\"
+$exportDir = "..\certificates\"
 $exportCrt = "localhost.crt"
 
 # Create the directory if it does not exist
