@@ -16,7 +16,7 @@ To do that you will have to run the `generate_pack_compose_fusion` script.
 
 # Frontend
 ## Perequisites
-Node.js
+Node.js  
 pnpm as your package manager (npm install -g pnpm)
 
 ## Initial setup
