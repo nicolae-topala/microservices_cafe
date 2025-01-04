@@ -22,12 +22,12 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
 
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
-        var client = await manager.FindByClientIdAsync("gateway", cancellationToken)
+        var gatewayClient = await manager.FindByClientIdAsync("gateway", cancellationToken)
             .ConfigureAwait(false);
 
-        if (client != null)
+        if (gatewayClient != null)
         {
-            await manager.DeleteAsync(client, cancellationToken)
+            await manager.DeleteAsync(gatewayClient, cancellationToken)
                 .ConfigureAwait(false);
         }
 
@@ -44,6 +44,48 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
             PostLogoutRedirectUris =
                 {
                     new Uri("https://localhost:8081/graphql/")
+                },
+            Permissions =
+                {
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Logout,
+                    Permissions.Endpoints.Token,
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + "products_api_scope",
+                    Permissions.Prefixes.Scope + "user_api_scope"
+                },
+            Requirements =
+            {
+                Requirements.Features.ProofKeyForCodeExchange
+            }
+        }, cancellationToken).ConfigureAwait(false);
+
+        var client = await manager.FindByClientIdAsync("nextjs_client", cancellationToken)
+            .ConfigureAwait(false);
+
+        if (client != null)
+        {
+            await manager.DeleteAsync(client, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        await manager.CreateAsync(new OpenIddictApplicationDescriptor
+        {
+            ClientId = "nextjs_client",
+            ClientSecret = "CBDA4D22-87F3-44B5-A5E3-6FE1E111FBFB",
+            ConsentType = ConsentTypes.Explicit,
+            DisplayName = "NextJs Client Application",
+            RedirectUris =
+                {
+                    new Uri("https://localhost:3000/api/auth/callback/authServer")
+                },
+            PostLogoutRedirectUris =
+                {
+                    new Uri("https://localhost:3000/api/auth/callback/authServer")
                 },
             Permissions =
                 {

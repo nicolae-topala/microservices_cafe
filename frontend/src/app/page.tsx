@@ -1,7 +1,10 @@
 import Image from 'next/image';
 import styles from './page.module.css';
+import { auth } from '@/auth';
 
-export default function Home() {
+const Home = async () => {
+    const session = await auth();
+
     return (
         <div className={styles.page}>
             <main className={styles.main}>
@@ -19,6 +22,11 @@ export default function Home() {
                     </li>
                     <li>Save and see your changes instantly.</li>
                 </ol>
+
+                <div>
+                    Current seesion: {session?.user?.email}
+                    {session?.user?.id}
+                </div>
 
                 <div className={styles.ctas}>
                     <a
@@ -92,4 +100,6 @@ export default function Home() {
             </footer>
         </div>
     );
-}
+};
+
+export default Home;
