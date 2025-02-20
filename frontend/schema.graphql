@@ -1,0 +1,373 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+interface Error {
+  message: String!
+}
+
+"A connection to a list of items."
+type CategoriesConnection {
+  "A list of edges."
+  edges: [CategoriesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Category!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type CategoriesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Category!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  parentCategory: Category
+  products: [Product]!
+  subCategories: [Category]
+}
+
+type CreateCategoryPayload {
+  category: Category
+  errors: [CreateCategoryError!]
+}
+
+type CreateProductPayload {
+  errors: [CreateProductError!]
+  product: Product
+}
+
+type DeleteCategoryPayload {
+  boolean: Boolean
+  errors: [DeleteCategoryError!]
+}
+
+type DeleteProductPayload {
+  boolean: Boolean
+  errors: [DeleteProductError!]
+}
+
+type EditCategoryPayload {
+  category: Category
+  errors: [EditCategoryError!]
+}
+
+type EditProductPayload {
+  errors: [EditProductError!]
+  product: Product
+}
+
+type Mutation {
+  createCategory(input: CreateCategoryInput!): CreateCategoryPayload!
+  createProduct(input: CreateProductInput!): CreateProductPayload!
+  deleteCategory(input: DeleteCategoryInput!): DeleteCategoryPayload!
+  deleteProduct(input: DeleteProductInput!): DeleteProductPayload!
+  editCategory(input: EditCategoryInput!): EditCategoryPayload!
+  editProduct(input: EditProductInput!): EditProductPayload!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+}
+
+type Price {
+  amount: Decimal!
+  currency: CurrencyEnum!
+}
+
+type Product {
+  categories: [Category]!
+  description: String!
+  id: ID!
+  ingredients: [String]!
+  isInStock: Boolean!
+  isVisible: Boolean!
+  name: String!
+  price: Price!
+  type: ProductTypeEnum!
+}
+
+"A connection to a list of items."
+type ProductsConnection {
+  "A list of edges."
+  edges: [ProductsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Product!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ProductsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Product!
+}
+
+type Query {
+  categories("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [CategorySortInput!] where: CategoryFilterInput): CategoriesConnection
+  products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductSortInput!] where: ProductFilterInput): ProductsConnection
+  userInfo: UserInfoDto!
+}
+
+type ResultError implements Error {
+  code: String!
+  message: String!
+}
+
+type UserInfoDto {
+  avatarUrl: String
+  email: String
+  sub: String
+  userName: String
+}
+
+union CreateCategoryError = ResultError
+
+union CreateProductError = ResultError
+
+union DeleteCategoryError = ResultError
+
+union DeleteProductError = ResultError
+
+union EditCategoryError = ResultError
+
+union EditProductError = ResultError
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input CategoryFilterInput {
+  and: [CategoryFilterInput!]
+  id: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [CategoryFilterInput!]
+  parentCategory: CategoryFilterInput
+  products: ListFilterInputTypeOfProductFilterInput
+  subCategories: ListFilterInputTypeOfCategoryFilterInput
+}
+
+input CategorySortInput {
+  id: SortEnumType
+  name: SortEnumType
+  parentCategory: CategorySortInput
+}
+
+input CreateCategoryDtoInput {
+  name: String!
+}
+
+input CreateCategoryInput {
+  category: CreateCategoryDtoInput!
+}
+
+input CreateProductDtoInput {
+  categoryIds: [UUID!]!
+  currency: CurrencyEnum!
+  description: String!
+  ingredients: [String!]!
+  name: String!
+  price: Decimal!
+  type: ProductTypeEnum!
+}
+
+input CreateProductInput {
+  product: CreateProductDtoInput!
+}
+
+input CurrencyEnumOperationFilterInput {
+  eq: CurrencyEnum
+  in: [CurrencyEnum!]
+  neq: CurrencyEnum
+  nin: [CurrencyEnum!]
+}
+
+input DecimalOperationFilterInput {
+  eq: Decimal
+  gt: Decimal
+  gte: Decimal
+  in: [Decimal]
+  lt: Decimal
+  lte: Decimal
+  neq: Decimal
+  ngt: Decimal
+  ngte: Decimal
+  nin: [Decimal]
+  nlt: Decimal
+  nlte: Decimal
+}
+
+input DeleteCategoryInput {
+  categoryId: UUID!
+}
+
+input DeleteProductInput {
+  productId: UUID!
+}
+
+input EditCategoryDtoInput {
+  id: UUID!
+  name: String!
+}
+
+input EditCategoryInput {
+  category: EditCategoryDtoInput!
+}
+
+input EditProductDtoInput {
+  categoryId: UUID
+  currency: CurrencyEnum
+  description: String
+  id: UUID!
+  ingredients: [String!]
+  isInStock: Boolean
+  isVisible: Boolean
+  name: String
+  price: Decimal
+  type: ProductTypeEnum
+}
+
+input EditProductInput {
+  product: EditProductDtoInput!
+}
+
+input ListFilterInputTypeOfCategoryFilterInput {
+  all: CategoryFilterInput
+  any: Boolean
+  none: CategoryFilterInput
+  some: CategoryFilterInput
+}
+
+input ListFilterInputTypeOfProductFilterInput {
+  all: ProductFilterInput
+  any: Boolean
+  none: ProductFilterInput
+  some: ProductFilterInput
+}
+
+input ListStringOperationFilterInput {
+  all: StringOperationFilterInput
+  any: Boolean
+  none: StringOperationFilterInput
+  some: StringOperationFilterInput
+}
+
+input PriceFilterInput {
+  amount: DecimalOperationFilterInput
+  and: [PriceFilterInput!]
+  currency: CurrencyEnumOperationFilterInput
+  or: [PriceFilterInput!]
+}
+
+input PriceSortInput {
+  amount: SortEnumType
+  currency: SortEnumType
+}
+
+input ProductFilterInput {
+  and: [ProductFilterInput!]
+  categories: ListFilterInputTypeOfCategoryFilterInput
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  ingredients: ListStringOperationFilterInput
+  isInStock: BooleanOperationFilterInput
+  isVisible: BooleanOperationFilterInput
+  name: StringOperationFilterInput
+  or: [ProductFilterInput!]
+  price: PriceFilterInput
+  type: ProductTypeEnumOperationFilterInput
+}
+
+input ProductSortInput {
+  description: SortEnumType
+  id: SortEnumType
+  isInStock: SortEnumType
+  isVisible: SortEnumType
+  name: SortEnumType
+  price: PriceSortInput
+  type: SortEnumType
+}
+
+input ProductTypeEnumOperationFilterInput {
+  eq: ProductTypeEnum
+  in: [ProductTypeEnum!]
+  neq: ProductTypeEnum
+  nin: [ProductTypeEnum!]
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  contains: String
+  endsWith: String
+  eq: String
+  in: [String]
+  ncontains: String
+  nendsWith: String
+  neq: String
+  nin: [String]
+  nstartsWith: String
+  or: [StringOperationFilterInput!]
+  startsWith: String
+}
+
+input UuidOperationFilterInput {
+  eq: UUID
+  gt: UUID
+  gte: UUID
+  in: [UUID]
+  lt: UUID
+  lte: UUID
+  neq: UUID
+  ngt: UUID
+  ngte: UUID
+  nin: [UUID]
+  nlt: UUID
+  nlte: UUID
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+enum CurrencyEnum {
+  EUR
+  USD
+}
+
+enum ProductTypeEnum {
+  OFFLINE
+  ONLINE
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"The built-in `Decimal` scalar type."
+scalar Decimal
+
+scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

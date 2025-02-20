@@ -1,17 +1,8 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
-
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin'],
-});
+import ApolloWrapper from '@/lib/ApolloWrapper';
+import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -25,8 +16,13 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <SessionProvider>{children}</SessionProvider>
+            <body>
+                <SessionProvider>
+                    <ApolloWrapper>
+                        <Header />
+                        {children}
+                    </ApolloWrapper>
+                </SessionProvider>
             </body>
         </html>
     );

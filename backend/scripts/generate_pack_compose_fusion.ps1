@@ -9,7 +9,7 @@ param (
 
     [Parameter(Mandatory=$false)]
     [string]
-    $GatewayPath = "../src/Gateway/Gateway.API/gateway"
+    $GatewayPath = "../src/Gateway/Gateway.API"
 )
 
 # Make sure that any error in a PowerShell cmdlet stops execution
@@ -65,7 +65,7 @@ Write-Host "Composing the gateway with all subgraphs..."
 Write-Host "--------------------------------------------"
 
 # Build an array of arguments for the 'fusion compose' command
-$composeArgs = @("fusion", "compose", "-p", $GatewayPath)
+$composeArgs = @("fusion", "compose", "-p", "$GatewayPath/gateway")
 
 foreach ($API in $APIs) {
     $composeArgs += @("-s", $API.Path)
@@ -79,6 +79,18 @@ if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to compose the gateway."
     exit 1
 }
+
+Write-Host "`n--------------------------------------------"
+Write-Host "Generate and save Gateway schema for frontend..."
+Write-Host "--------------------------------------------"
+
+Write-Host "Generating schema for Gateway..."
+& dotnet run --project $GatewayPath -- schema export --output ../../../../frontend/schema.graphql
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Failed to generate schema for Gateway."
+    exit 1
+}
+Write-Host "Schema for Gateway generated successfully."
 
 Write-Host "`n--------------------------------------------"
 Write-Host "All operations completed successfully."

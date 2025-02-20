@@ -1,3 +1,5 @@
+using Gateway.API.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient("Fusion")
@@ -20,7 +22,23 @@ builder.Services
 builder.Services
     .AddGraphQLServer();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
+            ?? throw new InvalidOperationException("Allowed Origins not found.");
+
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseHeaderPropagation();
 

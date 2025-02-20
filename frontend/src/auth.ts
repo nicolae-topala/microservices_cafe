@@ -1,8 +1,6 @@
-import NextAuth from 'next-auth';
-// import { authConfig } from './auth.config';
+import NextAuth, { NextAuthConfig } from 'next-auth';
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-    // ...authConfig,
+export const authConfig: NextAuthConfig = {
     providers: [
         {
             id: 'authServer',
@@ -11,8 +9,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             issuer: process.env.AUTH_OIDC_ISSUER,
             clientId: process.env.AUTH_OIDC_ID,
             clientSecret: process.env.AUTH_OIDC_SECRET,
+            authorization: {
+                params: {
+                    scope: process.env.AUTH_OIDC_SCOPES,
+                },
+            },
             profile(profile) {
-                console.log('User logged in', { userId: profile.sub });
                 return {
                     id: profile.sub,
                     username: profile.sub,
@@ -28,7 +30,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         signOut: '/sign-in',
     },
     callbacks: {
-        jwt({ token, user }) {
+        jwt({ token, user, account }) {
+            if (account?.access_token) {
+                token.accessToken = account.access_token;
+            }
+
             if (user) {
                 token.username = user.username;
             }
@@ -36,7 +42,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
         session({ session, token }) {
             session.user.username = token.username;
+            session.user.accessToken = token.accessToken;
             return session;
         },
     },
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authConfig);

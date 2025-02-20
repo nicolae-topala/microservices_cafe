@@ -9,6 +9,7 @@ declare module 'next-auth' {
             username: string;
             name: string;
             email: string;
+            accessToken: string;
         } & DefaultSession;
     }
 
@@ -20,5 +21,12 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
     interface JWT extends DefaultJWT {
         username: string;
+        accessToken: string;
+    }
+}
+
+declare module '@apollo/client' {
+    export interface DefaultContext {
+        token?: string;
     }
 }
