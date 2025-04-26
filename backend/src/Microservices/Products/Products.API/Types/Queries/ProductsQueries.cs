@@ -10,10 +10,6 @@ public class ProductsQueries
     [UsePaging]
     [UseFiltering]
     [UseSorting]
-    public Task<IQueryable<Product>> GetProducts(ISender sender)
-    {
-        var result = sender.Send(new GetProductsQuery())
-            .ContinueWith(t => t.Result.Value);
-        return result;
-    }
+    public Task<IQueryable<Product>> GetProducts(ISender sender, CancellationToken cancellationToken) =>
+        sender.Send(new GetProductsQuery(), cancellationToken);
 }

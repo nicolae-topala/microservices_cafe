@@ -23,11 +23,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasMaxLength(2000)
             .IsRequired();
 
-        builder.ComplexProperty(x => x.Price, y => 
-            { 
-                y.IsRequired(); 
-            });
-
         builder
             .Property(x => x.Type)
             .IsRequired();
@@ -40,10 +35,22 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .Property(x => x.IsInStock)
             .IsRequired();
 
+        // Relationships
         builder
             .HasMany(x => x.Categories)
             .WithMany(c => c.Products);
 
+        builder
+            .HasMany(x => x.Categories)
+            .WithMany(c => c.Products);
+
+        builder
+            .HasMany(x => x.Variants)
+            .WithOne()
+            .HasForeignKey(x => x.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Indexes
         builder
             .HasIndex(x => x.Name)
             .IsUnique();

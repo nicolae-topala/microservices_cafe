@@ -1,4 +1,5 @@
 ﻿using Shared.Abstractions.Messaging;
+using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
 using User.Application.Services.Abstractions;
 using User.Shared.DTOs;
@@ -6,7 +7,7 @@ using User.Shared.DTOs;
 namespace User.Application.Features.Queries.GetUserInfo;
 
 public class GetUserInfoQueryHandler(IUserService userService)
-    : IQueryHandler<GetUserInfoQuery, UserInfoDto>
+    : IResultQueryHandler<GetUserInfoQuery, UserInfoDto>
 {
     public async Task<Result<UserInfoDto>> Handle(GetUserInfoQuery request, CancellationToken cancellationToken)
     {

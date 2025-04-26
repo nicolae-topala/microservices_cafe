@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Products.Application.Abstractions;
-using Shared.Abstractions.Messaging;
+using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Products.Commands.DeleteProduct;
 
 public class DeleteProductCommandHandler(IProductsDbContext dbContext)
-    : ICommandHandler<DeleteProductCommand>
+    : IResultCommandHandler<DeleteProductCommand>
 {
     public async Task<Result> Handle(
         DeleteProductCommand request,

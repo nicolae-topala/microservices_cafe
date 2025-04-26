@@ -10,9 +10,6 @@ public class CategoriesQueries
     [UsePaging]
     [UseFiltering]
     [UseSorting]
-    public async Task<IQueryable<Category>> GetCategories([Service] ISender sender)
-    {
-        var result = await sender.Send(new GetCategoriesQuery());
-        return result.Value;
-    }
+    public Task<IQueryable<Category>> GetCategories([Service] ISender sender, CancellationToken cancellationToken) =>
+        sender.Send(new GetCategoriesQuery(), cancellationToken);
 }

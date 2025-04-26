@@ -2,12 +2,12 @@
 
 import { HttpLink, useApolloClient } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { useSession } from 'next-auth/react';
 import {
     ApolloClient,
     ApolloNextAppProvider,
     InMemoryCache,
 } from '@apollo/experimental-nextjs-app-support';
+import { useSession } from 'next-auth/react';
 
 //https://github.com/apollographql/apollo-client-nextjs/issues/103#issuecomment-1790941212
 

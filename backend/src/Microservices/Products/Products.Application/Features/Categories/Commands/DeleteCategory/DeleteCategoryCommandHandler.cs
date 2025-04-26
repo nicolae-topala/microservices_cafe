@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Products.Application.Abstractions;
 using Shared.Abstractions.Messaging;
+using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Categories.Commands.DeleteCategory;
 
 public class DeleteCategoryCommandHandler(IProductsDbContext dbContext)
-    : ICommandHandler<DeleteCategoryCommand, bool>
+    : IResultCommandHandler<DeleteCategoryCommand, bool>
 {
     public async Task<Result<bool>> Handle(
         DeleteCategoryCommand request,

@@ -8,19 +8,19 @@ public class CategoryType : ObjectType<Category>
     {
         descriptor.BindFieldsExplicitly();
 
-        descriptor.Field(p => p.Id)
+        descriptor.Field(c => c.Id)
             .Type<NonNullType<IdType>>();
 
-        descriptor.Field(p => p.Name)
+        descriptor.Field(c => c.Name)
             .Type<NonNullType<StringType>>();
 
-        descriptor.Field(p => p.Products)
+        descriptor.Field(c => c.Products)
             .Type<NonNullType<ListType<ProductType>>>();
 
-        descriptor.Field(p => p.ParentCategory)
+        descriptor.Field(c => c.ParentCategory)
             .Type<CategoryType>();
 
-        descriptor.Field(p => p.SubCategories)
+        descriptor.Field(c => c.SubCategories)
             .Type<ListType<CategoryType>>();
     }
 }

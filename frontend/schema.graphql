@@ -7,6 +7,16 @@ interface Error {
   message: String!
 }
 
+type AddProductVariantAttributePayload {
+  errors: [AddProductVariantAttributeError!]
+  productVariantAttribute: ProductVariantAttribute
+}
+
+type AddProductVariantPayload {
+  errors: [AddProductVariantError!]
+  product: Product
+}
+
 "A connection to a list of items."
 type CategoriesConnection {
   "A list of edges."
@@ -64,6 +74,8 @@ type EditProductPayload {
 }
 
 type Mutation {
+  addProductVariant(input: AddProductVariantInput!): AddProductVariantPayload!
+  addProductVariantAttribute(input: AddProductVariantAttributeInput!): AddProductVariantAttributePayload!
   createCategory(input: CreateCategoryInput!): CreateCategoryPayload!
   createProduct(input: CreateProductInput!): CreateProductPayload!
   deleteCategory(input: DeleteCategoryInput!): DeleteCategoryPayload!
@@ -86,19 +98,44 @@ type PageInfo {
 
 type Price {
   amount: Decimal!
-  currency: CurrencyEnum!
+  currency: Currency!
 }
 
 type Product {
   categories: [Category]!
   description: String!
   id: ID!
-  ingredients: [String]!
   isInStock: Boolean!
   isVisible: Boolean!
   name: String!
+  type: ProductType!
+  variants: [ProductVariant]!
+}
+
+type ProductImage {
+  altText: String
+  id: ID!
+  imageUrl: String!
+  sortOrder: Int!
+  variantId: ID!
+}
+
+type ProductVariant {
+  id: ID!
+  images: [ProductImage]!
+  ingredients: [String]
+  isInStock: Boolean!
+  isVisible: Boolean!
   price: Price!
-  type: ProductTypeEnum!
+  productId: ID!
+  variantAttributes: [ProductVariantAttribute]!
+}
+
+type ProductVariantAttribute {
+  key: ProductVariantTypes!
+  name: String!
+  type: MeasurementType
+  value: Float
 }
 
 "A connection to a list of items."
@@ -137,6 +174,10 @@ type UserInfoDto {
   userName: String
 }
 
+union AddProductVariantAttributeError = ResultError
+
+union AddProductVariantError = ResultError
+
 union CreateCategoryError = ResultError
 
 union CreateProductError = ResultError
@@ -148,6 +189,27 @@ union DeleteProductError = ResultError
 union EditCategoryError = ResultError
 
 union EditProductError = ResultError
+
+input AddProductVariantAttributeDtoInput {
+  name: String!
+  productVariantId: UUID!
+  type: MeasurementType
+  value: Decimal
+}
+
+input AddProductVariantAttributeInput {
+  productVariantAttribute: AddProductVariantAttributeDtoInput!
+}
+
+input AddProductVariantDtoInput {
+  currency: Currency!
+  price: Decimal!
+  productId: UUID!
+}
+
+input AddProductVariantInput {
+  productVariant: AddProductVariantDtoInput!
+}
 
 input BooleanOperationFilterInput {
   eq: Boolean
@@ -180,23 +242,21 @@ input CreateCategoryInput {
 
 input CreateProductDtoInput {
   categoryIds: [UUID!]!
-  currency: CurrencyEnum!
   description: String!
   ingredients: [String!]!
   name: String!
-  price: Decimal!
-  type: ProductTypeEnum!
+  type: ProductType!
 }
 
 input CreateProductInput {
   product: CreateProductDtoInput!
 }
 
-input CurrencyEnumOperationFilterInput {
-  eq: CurrencyEnum
-  in: [CurrencyEnum!]
-  neq: CurrencyEnum
-  nin: [CurrencyEnum!]
+input CurrencyOperationFilterInput {
+  eq: Currency
+  in: [Currency!]
+  neq: Currency
+  nin: [Currency!]
 }
 
 input DecimalOperationFilterInput {
@@ -233,7 +293,7 @@ input EditCategoryInput {
 
 input EditProductDtoInput {
   categoryId: UUID
-  currency: CurrencyEnum
+  currency: Currency
   description: String
   id: UUID!
   ingredients: [String!]
@@ -241,11 +301,26 @@ input EditProductDtoInput {
   isVisible: Boolean
   name: String
   price: Decimal
-  type: ProductTypeEnum
+  type: ProductType
 }
 
 input EditProductInput {
   product: EditProductDtoInput!
+}
+
+input IntOperationFilterInput {
+  eq: Int
+  gt: Int
+  gte: Int
+  in: [Int]
+  lt: Int
+  lte: Int
+  neq: Int
+  ngt: Int
+  ngte: Int
+  nin: [Int]
+  nlt: Int
+  nlte: Int
 }
 
 input ListFilterInputTypeOfCategoryFilterInput {
@@ -262,6 +337,27 @@ input ListFilterInputTypeOfProductFilterInput {
   some: ProductFilterInput
 }
 
+input ListFilterInputTypeOfProductImageFilterInput {
+  all: ProductImageFilterInput
+  any: Boolean
+  none: ProductImageFilterInput
+  some: ProductImageFilterInput
+}
+
+input ListFilterInputTypeOfProductVariantAttributeFilterInput {
+  all: ProductVariantAttributeFilterInput
+  any: Boolean
+  none: ProductVariantAttributeFilterInput
+  some: ProductVariantAttributeFilterInput
+}
+
+input ListFilterInputTypeOfProductVariantFilterInput {
+  all: ProductVariantFilterInput
+  any: Boolean
+  none: ProductVariantFilterInput
+  some: ProductVariantFilterInput
+}
+
 input ListStringOperationFilterInput {
   all: StringOperationFilterInput
   any: Boolean
@@ -269,16 +365,18 @@ input ListStringOperationFilterInput {
   some: StringOperationFilterInput
 }
 
+input NullableOfMeasurementTypeOperationFilterInput {
+  eq: MeasurementType
+  in: [MeasurementType]
+  neq: MeasurementType
+  nin: [MeasurementType]
+}
+
 input PriceFilterInput {
   amount: DecimalOperationFilterInput
   and: [PriceFilterInput!]
-  currency: CurrencyEnumOperationFilterInput
+  currency: CurrencyOperationFilterInput
   or: [PriceFilterInput!]
-}
-
-input PriceSortInput {
-  amount: SortEnumType
-  currency: SortEnumType
 }
 
 input ProductFilterInput {
@@ -286,13 +384,22 @@ input ProductFilterInput {
   categories: ListFilterInputTypeOfCategoryFilterInput
   description: StringOperationFilterInput
   id: UuidOperationFilterInput
-  ingredients: ListStringOperationFilterInput
   isInStock: BooleanOperationFilterInput
   isVisible: BooleanOperationFilterInput
   name: StringOperationFilterInput
   or: [ProductFilterInput!]
-  price: PriceFilterInput
-  type: ProductTypeEnumOperationFilterInput
+  type: ProductTypeOperationFilterInput
+  variants: ListFilterInputTypeOfProductVariantFilterInput
+}
+
+input ProductImageFilterInput {
+  altText: StringOperationFilterInput
+  and: [ProductImageFilterInput!]
+  id: UuidOperationFilterInput
+  imageUrl: StringOperationFilterInput
+  or: [ProductImageFilterInput!]
+  sortOrder: IntOperationFilterInput
+  variantId: UuidOperationFilterInput
 }
 
 input ProductSortInput {
@@ -301,15 +408,43 @@ input ProductSortInput {
   isInStock: SortEnumType
   isVisible: SortEnumType
   name: SortEnumType
-  price: PriceSortInput
   type: SortEnumType
 }
 
-input ProductTypeEnumOperationFilterInput {
-  eq: ProductTypeEnum
-  in: [ProductTypeEnum!]
-  neq: ProductTypeEnum
-  nin: [ProductTypeEnum!]
+input ProductTypeOperationFilterInput {
+  eq: ProductType
+  in: [ProductType!]
+  neq: ProductType
+  nin: [ProductType!]
+}
+
+input ProductVariantAttributeFilterInput {
+  and: [ProductVariantAttributeFilterInput!]
+  key: ProductVariantTypesOperationFilterInput
+  name: StringOperationFilterInput
+  or: [ProductVariantAttributeFilterInput!]
+  type: NullableOfMeasurementTypeOperationFilterInput
+  value: DecimalOperationFilterInput
+}
+
+input ProductVariantFilterInput {
+  and: [ProductVariantFilterInput!]
+  id: UuidOperationFilterInput
+  images: ListFilterInputTypeOfProductImageFilterInput
+  ingredients: ListStringOperationFilterInput
+  isInStock: BooleanOperationFilterInput
+  isVisible: BooleanOperationFilterInput
+  or: [ProductVariantFilterInput!]
+  price: PriceFilterInput
+  productId: UuidOperationFilterInput
+  variantAttributes: ListFilterInputTypeOfProductVariantAttributeFilterInput
+}
+
+input ProductVariantTypesOperationFilterInput {
+  eq: ProductVariantTypes
+  in: [ProductVariantTypes!]
+  neq: ProductVariantTypes
+  nin: [ProductVariantTypes!]
 }
 
 input StringOperationFilterInput {
@@ -352,14 +487,28 @@ enum ApplyPolicy {
   VALIDATION
 }
 
-enum CurrencyEnum {
+enum Currency {
   EUR
   USD
 }
 
-enum ProductTypeEnum {
+enum MeasurementType {
+  GRAMS
+  KILOGRAMS
+  LITERS
+  MILLILITERS
+  UNITS
+}
+
+enum ProductType {
   OFFLINE
   ONLINE
+}
+
+enum ProductVariantTypes {
+  GRINDING
+  ROAST
+  SIZE
 }
 
 enum SortEnumType {

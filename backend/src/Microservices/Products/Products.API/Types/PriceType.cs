@@ -13,6 +13,6 @@ public class PriceType : ObjectType<Price>
             .Type<NonNullType<DecimalType>>();
 
         descriptor.Field(p => p.Currency)
-            .Type<NonNullType<EnumType<CurrencyEnum>>>();
+            .Type<NonNullType<EnumType<Currency>>>();
     }
 }

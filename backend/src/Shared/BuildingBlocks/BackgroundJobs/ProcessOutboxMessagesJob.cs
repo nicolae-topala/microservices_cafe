@@ -8,21 +8,17 @@ using Quartz;
 namespace Shared.BuildingBlocks.BackgroundJobs;
 
 [DisallowConcurrentExecution]
-public class ProcessOutboxMessagesJob<TContext> : IJob where TContext : DbContext
+public class ProcessOutboxMessagesJob<TContext>(
+    TContext dbContext,
+    IPublisher publisher) 
+    : IJob
+    where TContext : DbContext
 {
-    private readonly TContext _dbContext;
-    private readonly IPublisher _publisher;
     private const int batchSize = 20;
-
-    public ProcessOutboxMessagesJob(TContext dbContext, IPublisher publisher)
-    {
-        _dbContext = dbContext;
-        _publisher = publisher;
-    }
 
     public async Task Execute(IJobExecutionContext context)
     {
-        List<OutboxMessage> messages = await _dbContext
+        List<OutboxMessage> messages = await dbContext
             .Set<OutboxMessage>()
             .Where(m => m.ProcessedOnUtc == null)
             .Take(batchSize)
@@ -44,11 +40,11 @@ public class ProcessOutboxMessagesJob<TContext> : IJob where TContext : DbContex
                 continue;
             }
 
-            await _publisher.Publish(domainEvent, context.CancellationToken).ConfigureAwait(false);
+            await publisher.Publish(domainEvent, context.CancellationToken).ConfigureAwait(false);
 
             outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
         }
 
-        await _dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
+        await dbContext.SaveChangesAsync(context.CancellationToken).ConfigureAwait(false);
     }
 }

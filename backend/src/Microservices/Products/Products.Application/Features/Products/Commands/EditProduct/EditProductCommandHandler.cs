@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Products.Application.Abstractions;
 using Products.Domain.Entities;
-using Shared.Abstractions.Messaging;
+using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Products.Commands.EditProduct;
 public class EditProductCommandHandler(IProductsDbContext dbContext)
-    : ICommandHandler<EditProductCommand, Product>
+    : IResultCommandHandler<EditProductCommand, Product>
 {
     public async Task<Result<Product>> Handle(EditProductCommand request, CancellationToken cancellationToken)
     {
@@ -22,8 +22,6 @@ public class EditProductCommandHandler(IProductsDbContext dbContext)
         var productResult = product.Edit(
             request.Product.Name,
             request.Product.Description,
-            request.Product.Price,
-            request.Product.Currency,
             request.Product.Type,
             new List<Category>(),
             request.Product.IsVisible,

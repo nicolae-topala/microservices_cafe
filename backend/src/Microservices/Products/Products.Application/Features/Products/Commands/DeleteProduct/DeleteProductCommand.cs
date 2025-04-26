@@ -1,7 +1,7 @@
-﻿using Shared.Abstractions.Messaging;
+﻿using Shared.Abstractions.Messaging.ResultType;
 
 namespace Products.Application.Features.Products.Commands.DeleteProduct;
 
-public record DeleteProductCommand(Guid ProductId) : ICommand
+public record DeleteProductCommand(Guid ProductId) : IResultCommand
 {
 }

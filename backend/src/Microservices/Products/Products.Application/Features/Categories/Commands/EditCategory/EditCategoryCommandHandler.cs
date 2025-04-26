@@ -3,11 +3,12 @@ using Products.Application.Abstractions;
 using Products.Domain.Entities;
 using Products.Shared.Errors;
 using Shared.Abstractions.Messaging;
+using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Categories.Commands.EditCategory;
 public class EditCategoryCommandHandler(IProductsDbContext dbContext)
-    : ICommandHandler<EditCategoryCommand, Category>
+    : IResultCommandHandler<EditCategoryCommand, Category>
 {
     public async Task<Result<Category>> Handle(EditCategoryCommand request, CancellationToken cancellationToken)
     {

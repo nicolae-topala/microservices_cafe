@@ -1,9 +1,8 @@
 ﻿using MediatR;
-using Shared.BuildingBlocks.Result;
 
 namespace Shared.Abstractions.Messaging;
 
-public interface IQueryHandler<TQuery, TResponse> : IRequestHandler<TQuery, Result<TResponse>>
+public interface IQueryHandler<TQuery, TResponse> : IRequestHandler<TQuery, TResponse>
     where TQuery : IQuery<TResponse>
 {
 }

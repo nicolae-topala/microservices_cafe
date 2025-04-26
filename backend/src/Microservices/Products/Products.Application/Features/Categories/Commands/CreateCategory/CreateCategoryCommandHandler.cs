@@ -1,12 +1,13 @@
 ﻿using Products.Application.Abstractions;
 using Products.Domain.Entities;
 using Shared.Abstractions.Messaging;
+using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
 
 namespace Products.Application.Features.Categories.Commands.CreateCategory;
 
 public class DeleteProductCommandHandler(IProductsDbContext dbContext)
-    : ICommandHandler<CreateCategoryCommand, Category>
+    : IResultCommandHandler<CreateCategoryCommand, Category>
 {
     public async Task<Result<Category>> Handle(
         CreateCategoryCommand request,

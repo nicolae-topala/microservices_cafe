@@ -4,7 +4,8 @@ using Products.Application.Features.Categories.Commands.CreateCategory;
 using Products.Application.Features.Categories.Commands.DeleteCategory;
 using Products.Application.Features.Categories.Commands.EditCategory;
 using Products.Domain.Entities;
-using Products.Shared.DTOs;
+using Products.Shared.DTOs.Category;
+using Products.Shared.DTOs.Product;
 using Shared.BuildingBlocks.Result;
 using Shared.Helpers.Hotchocolate;
 

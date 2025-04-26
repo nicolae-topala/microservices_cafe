@@ -1,5 +1,5 @@
 using Products.Domain.Entities;
-using Shared.Enums;
+using PType = Shared.Enums.ProductType;
 
 namespace Products.API.Types;
 
@@ -18,14 +18,11 @@ public class ProductType : ObjectType<Product>
         descriptor.Field(p => p.Description)
             .Type<NonNullType<StringType>>();
 
-        descriptor.Field(p => p.Price)
-            .Type<NonNullType<PriceType>>();
+        descriptor.Field(p => p.Variants)
+            .Type<NonNullType<ListType<ProductVariantType>>>();
 
         descriptor.Field(p => p.Type)
-            .Type<NonNullType<EnumType<ProductTypeEnum>>>();
-
-        descriptor.Field(p => p.Ingredients)
-            .Type<NonNullType<ListType<StringType>>>();
+            .Type<NonNullType<EnumType<PType>>>();
 
         descriptor.Field(p => p.Categories)
             .Type<NonNullType<ListType<CategoryType>>>();
