@@ -6,7 +6,6 @@ using Products.Application.Features.Products.Commands.DeleteProduct;
 using Products.Application.Features.Products.Commands.EditProduct;
 using Products.Application.Features.ProductVariants.Commands;
 using Products.Domain.Entities;
-using Products.Domain.ValueObjects;
 using Products.Shared.DTOs.Category;
 using Products.Shared.DTOs.Product;
 using Products.Shared.DTOs.ProductVariant;
@@ -28,7 +27,7 @@ public class ProductsMutations
         ResultHandler.HandleResponse(await sender.Send(new AddProductVariantCommand(productVariant)));
 
     [Error<ResultError>]
-    public async Task<FieldResult<ProductVariantAttribute>> AddProductVariantAttribute(ISender sender, AddProductVariantAttributeDto productVariantAttribute) =>
+    public async Task<FieldResult<bool>> AddProductVariantAttribute(ISender sender, AddProductVariantAttributeDto productVariantAttribute) =>
         ResultHandler.HandleResponse(await sender.Send(new AddProductVariantAttributeCommand(productVariantAttribute)));
 
     [Error<ResultError>]

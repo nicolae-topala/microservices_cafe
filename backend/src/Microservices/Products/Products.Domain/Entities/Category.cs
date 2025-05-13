@@ -4,12 +4,13 @@ using Shared.Primitives;
 
 namespace Products.Domain.Entities;
 
-public sealed class Category : BaseEntity
+public sealed class Category : AggregateRoot
 {
     private readonly List<Category> _subCategories = [];
     private readonly List<Product> _products = [];
 
     public string Name { get; private set; }
+    public Guid? ParentCategoryId { get; private set; }
     public Category? ParentCategory { get; private set; }
     public IReadOnlyCollection<Product> Products => _products;
     public IReadOnlyCollection<Category>? SubCategories => _subCategories;
@@ -19,7 +20,7 @@ public sealed class Category : BaseEntity
     private Category(string name, Category? parentCategory = null) : base()
     {
         Name = name;
-        ParentCategory = parentCategory;
+        ParentCategoryId = parentCategory.Id;
     }
 
     public static Result<Category> Create(string name, Category? parentCategory = null)

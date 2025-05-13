@@ -12,8 +12,8 @@ public class ProductImageType : ObjectType<ProductImage>
         descriptor.Field(pi => pi.Id)
             .Type<NonNullType<IdType>>();
 
-        descriptor.Field(pi => pi.VariantId)
-            .Type<NonNullType<IdType>>();
+        descriptor.Field(c => c.ProductVariant)
+            .Type<ListType<ProductVariantType>>();
 
         descriptor.Field(pi => pi.ImageUrl)
             .Type<NonNullType<StringType>>();

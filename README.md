@@ -8,7 +8,7 @@ If you have Git you can add the following User Env Path to use the OpenSSL from 
 `C:\Program Files\Git\usr\bin\`
 
 ## Intial setup
-1) Run `generate_certificates` to generate and trust a https certificate, from `scripts` folder.
+1) From `scripts` folder run `generate_certificates` to generate and trust a https certificate.
 
 ## Fusion
 After making changes to any of the microservices graphs you will have to generate and compose them again for the gateway.  

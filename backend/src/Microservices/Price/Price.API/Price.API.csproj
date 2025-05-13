@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..\..\..</DockerfileContext>
+		<DockerComposeProjectPath>..\..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+		<UserSecretsId>b6e62a2d-6011-4f00-bc38-96c422d93cdf</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(ImplicitUsings)' == 'enable'">
+		<Using Include="Price.API" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BananaCakePop.Services" Version="13.9.0" />
+		<PackageReference Include="HotChocolate.AspNetCore" Version="14.0.0" />
+		<PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="14.0.0" />
+		<PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="14.0.0" />
+		<PackageReference Include="HotChocolate.Data" Version="14.0.0" />
+		<PackageReference Include="HotChocolate.Types.Analyzers" Version="14.0.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageReference Include="OpenIddict.Validation.AspNetCore" Version="5.8.0" />
+		<PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="5.8.0" />
+		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Shared\Shared.csproj" />
+		<ProjectReference Include="..\Price.Application\Price.Application.csproj" />
+		<ProjectReference Include="..\Price.Infrastructure\Price.Infrastructure.csproj" />
+	</ItemGroup>
+</Project>

@@ -14,6 +14,16 @@ public class ProductsDbContext(DbContextOptions<ProductsDbContext> options)
 
     public DbSet<ProductImage> ProductImages => Set<ProductImage>();
 
+    public DbSet<ProductVariantAttribute> ProductVariantAttributes => Set<ProductVariantAttribute>();
+
+    public DbSet<Recipe> Recipes => Set<Recipe>();
+
+    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
+
+    public DbSet<UnitsOfMeasure> UnitsOfMeasures => Set<UnitsOfMeasure>();
+
+    public DbSet<VariantAttributeDefinition> VariantAttributeDefinitions => Set<VariantAttributeDefinition>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
 

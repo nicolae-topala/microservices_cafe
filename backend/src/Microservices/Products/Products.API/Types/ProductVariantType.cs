@@ -11,8 +11,8 @@ public class ProductVariantType : ObjectType<ProductVariant>
         descriptor.Field(pv => pv.Id)
             .Type<NonNullType<IdType>>();
 
-        descriptor.Field(pv => pv.ProductId)
-            .Type<NonNullType<IdType>>();
+        descriptor.Field(pv => pv.Product)
+            .Type<NonNullType<ProductType>>();
 
         descriptor.Field(pv => pv.IsInStock)
             .Type<NonNullType<BooleanType>>();
@@ -28,8 +28,5 @@ public class ProductVariantType : ObjectType<ProductVariant>
 
         descriptor.Field(pv => pv.VariantAttributes)
             .Type<NonNullType<ListType<ProductVariantAttributeType>>>();
-
-        descriptor.Field(pv => pv.Ingredients)
-            .Type<ListType<StringType>>();
     }
 }

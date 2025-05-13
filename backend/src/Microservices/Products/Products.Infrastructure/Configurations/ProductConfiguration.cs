@@ -41,14 +41,10 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany(c => c.Products);
 
         builder
-            .HasMany(x => x.Categories)
-            .WithMany(c => c.Products);
-
-        builder
             .HasMany(x => x.Variants)
-            .WithOne()
+            .WithOne(x => x.Product)
             .HasForeignKey(x => x.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Indexes
         builder

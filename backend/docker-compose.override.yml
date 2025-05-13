@@ -47,6 +47,34 @@ services:
     extra_hosts:
       - "localhost:172.17.0.1"
 
+  inventory.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8088
+      - ASPNETCORE_HTTPS_PORTS=8089
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    ports:
+      - "8088:8088"
+      - "8089:8089"
+    extra_hosts:
+      - "localhost:172.17.0.1"
+      
+  price.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8090
+      - ASPNETCORE_HTTPS_PORTS=8091
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    ports:
+      - "8090:8090"
+      - "8091:8091"
+    extra_hosts:
+      - "localhost:172.17.0.1"
+
   auth.server:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

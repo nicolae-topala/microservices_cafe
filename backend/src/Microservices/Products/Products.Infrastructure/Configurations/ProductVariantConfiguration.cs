@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Products.Domain.Entities;
 using Products.Infrastructure.Constants;
-using Products.Domain.ValueObjects;
 
 namespace Products.Infrastructure.Configurations;
 
@@ -32,28 +31,16 @@ public class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVaria
             complexBuilder.IsRequired();
         });
 
-        builder.OwnsMany(x => x.VariantAttributes, navigationBuilder =>
-        {
-            navigationBuilder
-                .Property(va => va.Name)
-                .IsRequired();
-
-            navigationBuilder
-                .Property(va => va.Key)
-                .IsRequired();
-
-            navigationBuilder
-                .HasKey(
-                    "ProductVariantId", 
-                    nameof(ProductVariantAttribute.Key), 
-                    nameof(ProductVariantAttribute.Name));
-        });
-
         // Relationships
         builder
             .HasMany(x => x.Images)
+            .WithOne(x => x.ProductVariant)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(x => x.VariantAttributes)
             .WithOne()
-            .HasForeignKey(x => x.VariantId)
+            .HasForeignKey(x => x.AttributeDefinitionId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

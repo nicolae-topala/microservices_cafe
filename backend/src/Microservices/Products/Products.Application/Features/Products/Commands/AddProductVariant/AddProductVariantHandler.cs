@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Products.Application.Abstractions;
 using Products.Domain.Entities;
-using Products.Domain.ValueObjects;
 using Products.Shared.Errors;
 using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;

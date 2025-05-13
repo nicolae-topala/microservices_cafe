@@ -1,0 +1,6 @@
+{
+  "subgraph": "Inventory",
+  "http": {
+    "baseAddress": "http://inventory.api:8088/graphql/"
+  }
+}

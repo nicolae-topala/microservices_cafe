@@ -1,0 +1,509 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+interface Error {
+  message: String!
+}
+
+type Address {
+  street: String!
+  city: String!
+  postalCode: String!
+  country: String!
+}
+
+type CreateItemPayload {
+  item: Item
+  errors: [CreateItemError!]
+}
+
+type CreateLocationPayload {
+  location: Location
+  errors: [CreateLocationError!]
+}
+
+type CreateMovementPayload {
+  movement: Movement
+  errors: [CreateMovementError!]
+}
+
+type DeleteItemPayload {
+  boolean: Boolean
+  errors: [DeleteItemError!]
+}
+
+type DeleteLocationPayload {
+  boolean: Boolean
+  errors: [DeleteLocationError!]
+}
+
+type DeleteMovementPayload {
+  boolean: Boolean
+  errors: [DeleteMovementError!]
+}
+
+type Item {
+  id: ID!
+  quantity: Int!
+  expiryDate: Date
+  productVariantId: ID!
+  location: Location!
+}
+
+"A connection to a list of items."
+type ItemsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ItemsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Item!]
+}
+
+"An edge in a connection."
+type ItemsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Item!
+}
+
+type Location {
+  id: ID!
+  name: String!
+  address: Address!
+  locationType: LocationType!
+}
+
+type LocationType {
+  id: ID!
+  name: String!
+  description: String
+}
+
+"A connection to a list of items."
+type LocationsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [LocationsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Location!]
+}
+
+"An edge in a connection."
+type LocationsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Location!
+}
+
+type Movement {
+  id: ID!
+  quantity: Int!
+  movementDate: DateTime!
+  item: Item!
+  location: Location!
+  movementType: MovementType!
+}
+
+type MovementType {
+  id: ID!
+  name: String!
+  description: String
+}
+
+"A connection to a list of items."
+type MovementsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [MovementsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Movement!]
+}
+
+"An edge in a connection."
+type MovementsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Movement!
+}
+
+type Mutation @authorize @authorize @authorize {
+  createItem(input: CreateItemInput!): CreateItemPayload! @cost(weight: "10")
+  updateItem(input: UpdateItemInput!): UpdateItemPayload! @cost(weight: "10")
+  deleteItem(input: DeleteItemInput!): DeleteItemPayload! @cost(weight: "10")
+  createLocation(input: CreateLocationInput!): CreateLocationPayload! @cost(weight: "10")
+  updateLocation(input: UpdateLocationInput!): UpdateLocationPayload! @cost(weight: "10")
+  deleteLocation(input: DeleteLocationInput!): DeleteLocationPayload! @cost(weight: "10")
+  createMovement(input: CreateMovementInput!): CreateMovementPayload! @cost(weight: "10")
+  updateMovement(input: UpdateMovementInput!): UpdateMovementPayload! @cost(weight: "10")
+  deleteMovement(input: DeleteMovementInput!): DeleteMovementPayload! @cost(weight: "10")
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type Query {
+  items("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ItemFilterInput @cost(weight: "10") order: [ItemSortInput!] @cost(weight: "10")): ItemsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  locations("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: LocationFilterInput @cost(weight: "10") order: [LocationSortInput!] @cost(weight: "10")): LocationsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+  movements("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: MovementFilterInput @cost(weight: "10") order: [MovementSortInput!] @cost(weight: "10")): MovementsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], sizedFields: [ "edges", "nodes" ]) @cost(weight: "10")
+}
+
+type ResultError implements Error {
+  code: String!
+  message: String!
+}
+
+type UpdateItemPayload {
+  boolean: Boolean
+  errors: [UpdateItemError!]
+}
+
+type UpdateLocationPayload {
+  boolean: Boolean
+  errors: [UpdateLocationError!]
+}
+
+type UpdateMovementPayload {
+  boolean: Boolean
+  errors: [UpdateMovementError!]
+}
+
+union CreateItemError = ResultError
+
+union CreateLocationError = ResultError
+
+union CreateMovementError = ResultError
+
+union DeleteItemError = ResultError
+
+union DeleteLocationError = ResultError
+
+union DeleteMovementError = ResultError
+
+union UpdateItemError = ResultError
+
+union UpdateLocationError = ResultError
+
+union UpdateMovementError = ResultError
+
+input AddressFilterInput {
+  and: [AddressFilterInput!]
+  or: [AddressFilterInput!]
+  street: StringOperationFilterInput
+  city: StringOperationFilterInput
+  postalCode: StringOperationFilterInput
+  country: StringOperationFilterInput
+}
+
+input AddressInput {
+  street: String!
+  city: String!
+  postalCode: String!
+  country: String!
+}
+
+input AddressSortInput {
+  street: SortEnumType @cost(weight: "10")
+  city: SortEnumType @cost(weight: "10")
+  postalCode: SortEnumType @cost(weight: "10")
+  country: SortEnumType @cost(weight: "10")
+}
+
+input CreateItemDtoInput {
+  productVariantId: UUID!
+  locationId: UUID!
+  quantity: Int!
+  expiryDate: Date
+}
+
+input CreateItemInput {
+  itemDto: CreateItemDtoInput!
+}
+
+input CreateLocationDtoInput {
+  name: String!
+  address: AddressInput!
+  locationTypeId: UUID!
+}
+
+input CreateLocationInput {
+  locationDto: CreateLocationDtoInput!
+}
+
+input CreateMovementDtoInput {
+  itemId: UUID!
+  movementTypeId: UUID!
+  locationId: UUID!
+  quantity: Int!
+  movementDate: DateTime!
+}
+
+input CreateMovementInput {
+  movementDto: CreateMovementDtoInput!
+}
+
+input DateOperationFilterInput {
+  eq: Date @cost(weight: "10")
+  neq: Date @cost(weight: "10")
+  in: [Date] @cost(weight: "10")
+  nin: [Date] @cost(weight: "10")
+  gt: Date @cost(weight: "10")
+  ngt: Date @cost(weight: "10")
+  gte: Date @cost(weight: "10")
+  ngte: Date @cost(weight: "10")
+  lt: Date @cost(weight: "10")
+  nlt: Date @cost(weight: "10")
+  lte: Date @cost(weight: "10")
+  nlte: Date @cost(weight: "10")
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime @cost(weight: "10")
+  neq: DateTime @cost(weight: "10")
+  in: [DateTime] @cost(weight: "10")
+  nin: [DateTime] @cost(weight: "10")
+  gt: DateTime @cost(weight: "10")
+  ngt: DateTime @cost(weight: "10")
+  gte: DateTime @cost(weight: "10")
+  ngte: DateTime @cost(weight: "10")
+  lt: DateTime @cost(weight: "10")
+  nlt: DateTime @cost(weight: "10")
+  lte: DateTime @cost(weight: "10")
+  nlte: DateTime @cost(weight: "10")
+}
+
+input DeleteItemInput {
+  id: UUID!
+}
+
+input DeleteLocationInput {
+  id: UUID!
+}
+
+input DeleteMovementInput {
+  id: UUID!
+}
+
+input IntOperationFilterInput {
+  eq: Int @cost(weight: "10")
+  neq: Int @cost(weight: "10")
+  in: [Int] @cost(weight: "10")
+  nin: [Int] @cost(weight: "10")
+  gt: Int @cost(weight: "10")
+  ngt: Int @cost(weight: "10")
+  gte: Int @cost(weight: "10")
+  ngte: Int @cost(weight: "10")
+  lt: Int @cost(weight: "10")
+  nlt: Int @cost(weight: "10")
+  lte: Int @cost(weight: "10")
+  nlte: Int @cost(weight: "10")
+}
+
+input ItemFilterInput {
+  and: [ItemFilterInput!]
+  or: [ItemFilterInput!]
+  quantity: IntOperationFilterInput
+  expiryDate: DateOperationFilterInput
+  productVariantId: UuidOperationFilterInput
+  locationId: UuidOperationFilterInput
+  location: LocationFilterInput
+  id: UuidOperationFilterInput
+}
+
+input ItemSortInput {
+  quantity: SortEnumType @cost(weight: "10")
+  expiryDate: SortEnumType @cost(weight: "10")
+  productVariantId: SortEnumType @cost(weight: "10")
+  locationId: SortEnumType @cost(weight: "10")
+  location: LocationSortInput @cost(weight: "10")
+  id: SortEnumType @cost(weight: "10")
+}
+
+input LocationFilterInput {
+  and: [LocationFilterInput!]
+  or: [LocationFilterInput!]
+  name: StringOperationFilterInput
+  address: AddressFilterInput
+  locationTypeId: UuidOperationFilterInput
+  locationType: LocationTypeFilterInput
+  id: UuidOperationFilterInput
+}
+
+input LocationSortInput {
+  name: SortEnumType @cost(weight: "10")
+  address: AddressSortInput @cost(weight: "10")
+  locationTypeId: SortEnumType @cost(weight: "10")
+  locationType: LocationTypeSortInput @cost(weight: "10")
+  id: SortEnumType @cost(weight: "10")
+}
+
+input LocationTypeFilterInput {
+  and: [LocationTypeFilterInput!]
+  or: [LocationTypeFilterInput!]
+  name: StringOperationFilterInput
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+}
+
+input LocationTypeSortInput {
+  name: SortEnumType @cost(weight: "10")
+  description: SortEnumType @cost(weight: "10")
+  id: SortEnumType @cost(weight: "10")
+}
+
+input MovementFilterInput {
+  and: [MovementFilterInput!]
+  or: [MovementFilterInput!]
+  quantity: IntOperationFilterInput
+  movementDate: DateTimeOperationFilterInput
+  itemId: UuidOperationFilterInput
+  movementTypeId: UuidOperationFilterInput
+  locationId: UuidOperationFilterInput
+  item: ItemFilterInput
+  movementType: MovementTypeFilterInput
+  location: LocationFilterInput
+  id: UuidOperationFilterInput
+}
+
+input MovementSortInput {
+  quantity: SortEnumType @cost(weight: "10")
+  movementDate: SortEnumType @cost(weight: "10")
+  itemId: SortEnumType @cost(weight: "10")
+  movementTypeId: SortEnumType @cost(weight: "10")
+  locationId: SortEnumType @cost(weight: "10")
+  item: ItemSortInput @cost(weight: "10")
+  movementType: MovementTypeSortInput @cost(weight: "10")
+  location: LocationSortInput @cost(weight: "10")
+  id: SortEnumType @cost(weight: "10")
+}
+
+input MovementTypeFilterInput {
+  and: [MovementTypeFilterInput!]
+  or: [MovementTypeFilterInput!]
+  name: StringOperationFilterInput
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+}
+
+input MovementTypeSortInput {
+  name: SortEnumType @cost(weight: "10")
+  description: SortEnumType @cost(weight: "10")
+  id: SortEnumType @cost(weight: "10")
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String @cost(weight: "10")
+  neq: String @cost(weight: "10")
+  contains: String @cost(weight: "20")
+  ncontains: String @cost(weight: "20")
+  in: [String] @cost(weight: "10")
+  nin: [String] @cost(weight: "10")
+  startsWith: String @cost(weight: "20")
+  nstartsWith: String @cost(weight: "20")
+  endsWith: String @cost(weight: "20")
+  nendsWith: String @cost(weight: "20")
+}
+
+input UpdateItemDtoInput {
+  itemId: UUID!
+  productVariantId: UUID
+  locationId: UUID
+  quantity: Int
+  expiryDate: Date
+}
+
+input UpdateItemInput {
+  itemDto: UpdateItemDtoInput!
+}
+
+input UpdateLocationDtoInput {
+  locationId: UUID!
+  name: String
+  address: AddressInput
+  locationTypeId: UUID
+}
+
+input UpdateLocationInput {
+  locationDto: UpdateLocationDtoInput!
+}
+
+input UpdateMovementDtoInput {
+  movementId: UUID!
+  itemId: UUID
+  movementTypeId: UUID
+  locationId: UUID
+  quantity: Int
+  movementDate: DateTime
+}
+
+input UpdateMovementInput {
+  movementDto: UpdateMovementDtoInput!
+}
+
+input UuidOperationFilterInput {
+  eq: UUID @cost(weight: "10")
+  neq: UUID @cost(weight: "10")
+  in: [UUID] @cost(weight: "10")
+  nin: [UUID] @cost(weight: "10")
+  gt: UUID @cost(weight: "10")
+  ngt: UUID @cost(weight: "10")
+  gte: UUID @cost(weight: "10")
+  ngte: UUID @cost(weight: "10")
+  lt: UUID @cost(weight: "10")
+  nlt: UUID @cost(weight: "10")
+  lte: UUID @cost(weight: "10")
+  nlte: UUID @cost(weight: "10")
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+"The authorize directive."
+directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on OBJECT | FIELD_DEFINITION
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The purpose of the `@listSize` directive is to either inform the static analysis about the size of returned lists (if that information is statically available), or to point the analysis to where to find that information."
+directive @listSize("The `assumedSize` argument can be used to statically define the maximum length of a list returned by a field." assumedSize: Int "The `slicingArguments` argument can be used to define which of the field's arguments with numeric type are slicing arguments, so that their value determines the size of the list returned by that field. It may specify a list of multiple slicing arguments." slicingArguments: [String!] "The `sizedFields` argument can be used to define that the value of the `assumedSize` argument or of a slicing argument does not affect the size of a list returned by a field itself, but that of a list returned by one of its sub-fields." sizedFields: [String!] "The `requireOneSlicingArgument` argument can be used to inform the static analysis that it should expect that exactly one of the defined slicing arguments is present in a query. If that is not the case (i.e., if none or multiple slicing arguments are present), the static analysis may throw an error." requireOneSlicingArgument: Boolean! = true) on FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

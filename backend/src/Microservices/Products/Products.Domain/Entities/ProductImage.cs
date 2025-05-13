@@ -6,46 +6,105 @@ namespace Products.Domain.Entities;
 
 public sealed class ProductImage : BaseEntity
 {
-    public Guid VariantId { get; private set; }
     public string ImageUrl { get; private set; }
     public string? AltText { get; private set; }
-    public int SortOrder { get; private set; } 
+    public int SortOrder { get; private set; }
+    public Guid ProductVariantId { get; private set; }
+    public ProductVariant ProductVariant { get; private set; }
 
     private ProductImage() { }
 
     private ProductImage(
-        Guid variantId,
+        ProductVariant productVariant,
         string imageUrl,
         string? altText,
         int sortOrder)
     {
-        VariantId = variantId;
+        ProductVariant = productVariant;
+        ProductVariantId = productVariant.Id;
         ImageUrl = imageUrl;
         AltText = altText;
         SortOrder = sortOrder;
     }
 
     public static Result<ProductImage> Create(
-        Guid variantId,
+        ProductVariant productVariant,
         string imageUrl,
         string? altText = null,
         int sortOrder = 0)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
         {
-            return Result.Failure<ProductImage>(CommonErrors.NullValue);
+            return Result.Failure<ProductImage>(new ResultError("Image.InvalidUrl", "Image URL cannot be empty."));
         }
 
-        return Result.Success(new ProductImage(variantId, imageUrl, altText, sortOrder));
+        if (sortOrder < 0)
+        {
+            return Result.Failure<ProductImage>(new ResultError("Image.InvalidSortOrder", "Sort order cannot be negative."));
+        }
+
+        return Result.Success(new ProductImage(productVariant, imageUrl, altText, sortOrder));
     }
 
     public void UpdateSortOrder(int sortOrder)
     {
-        SortOrder = sortOrder;
+        if (sortOrder >= 0)
+        {
+            SortOrder = sortOrder;
+        }
     }
 
     public void UpdateAltText(string? altText)
     {
         AltText = altText;
+    }
+
+    public Result UpdateImageUrl(string imageUrl)
+    {
+        if (string.IsNullOrWhiteSpace(imageUrl))
+        {
+            return Result.Failure(new ResultError("Image.InvalidUrl", "Image URL cannot be empty."));
+        }
+
+        ImageUrl = imageUrl;
+        return Result.Success();
+    }
+
+    public bool IsMainImage() => SortOrder == 0;
+
+    public void SetAsMainImage()
+    {
+        SortOrder = 0;
+    }
+
+    public Result Validate()
+    {
+        if (string.IsNullOrWhiteSpace(ImageUrl))
+        {
+            return Result.Failure(new ResultError("Image.InvalidUrl", "Image URL cannot be empty."));
+        }
+
+        if (SortOrder < 0)
+        {
+            return Result.Failure(new ResultError("Image.InvalidSortOrder", "Sort order cannot be negative."));
+        }
+
+        return Result.Success();
+    }
+
+    public string GetFormattedImageDescription()
+    {
+        return string.IsNullOrWhiteSpace(AltText)
+            ? $"Image {SortOrder + 1}"
+            : AltText;
+    }
+
+    public Result<ProductImage> Clone(ProductVariant newProductVariant)
+    {
+        return Create(
+            newProductVariant,
+            ImageUrl,
+            AltText,
+            SortOrder);
     }
 }

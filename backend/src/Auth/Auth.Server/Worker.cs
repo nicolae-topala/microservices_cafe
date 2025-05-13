@@ -19,6 +19,8 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
 
         await AddScopeAsync(scopeManager, "products_api_scope", "Products API scope", "products_api", cancellationToken);
         await AddScopeAsync(scopeManager, "user_api_scope", "User API scope", "user_api", cancellationToken);
+        await AddScopeAsync(scopeManager, "inventory_api_scope", "Inventory API scope", "inventory_api", cancellationToken);
+        await AddScopeAsync(scopeManager, "price_api_scope", "Price API scope", "price_api", cancellationToken);
 
         var manager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
@@ -56,7 +58,9 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
                     Permissions.Prefixes.Scope + "products_api_scope",
-                    Permissions.Prefixes.Scope + "user_api_scope"
+                    Permissions.Prefixes.Scope + "user_api_scope",
+                    Permissions.Prefixes.Scope + "inventory_api_scope",
+                    Permissions.Prefixes.Scope + "price_api_scope"
                 },
             Requirements =
             {
@@ -98,7 +102,9 @@ public class Worker(IServiceProvider serviceProvider) : IHostedService
                     Permissions.Scopes.Profile,
                     Permissions.Scopes.Roles,
                     Permissions.Prefixes.Scope + "products_api_scope",
-                    Permissions.Prefixes.Scope + "user_api_scope"
+                    Permissions.Prefixes.Scope + "user_api_scope",
+                    Permissions.Prefixes.Scope + "inventory_api_scope",
+                    Permissions.Prefixes.Scope + "price_api_scope"
                 },
             Requirements =
             {

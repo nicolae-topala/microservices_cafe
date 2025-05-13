@@ -3,8 +3,10 @@ param (
     [Parameter(Mandatory=$false)]
     [System.Collections.Hashtable[]]
     $APIs = @(
+        @{ Name = "User";     Path = "../src/Microservices/User/User.API" },
         @{ Name = "Products"; Path = "../src/Microservices/Products/Products.API" },
-        @{ Name = "User";     Path = "../src/Microservices/User/User.API" }
+        @{ Name = "Inventory"; Path = "../src/Microservices/Inventory/Inventory.API" },
+        @{ Name = "Price";    Path = "../src/Microservices/Price/Price.API" }
     ),
 
     [Parameter(Mandatory=$false)]
@@ -23,7 +25,7 @@ dotnet tool restore
 if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to restore tools"
         exit 1
-    }
+}
 
 Write-Host "`n-----------------------------------------"
 Write-Host "Starting schema generation and subgraph packing..."
@@ -95,3 +97,6 @@ Write-Host "Schema for Gateway generated successfully."
 Write-Host "`n--------------------------------------------"
 Write-Host "All operations completed successfully."
 Write-Host "--------------------------------------------"
+
+Write-Host "Press Enter to exit..."
+Read-Host

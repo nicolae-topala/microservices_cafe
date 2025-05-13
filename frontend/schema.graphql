@@ -8,13 +8,20 @@ interface Error {
 }
 
 type AddProductVariantAttributePayload {
+  boolean: Boolean
   errors: [AddProductVariantAttributeError!]
-  productVariantAttribute: ProductVariantAttribute
 }
 
 type AddProductVariantPayload {
   errors: [AddProductVariantError!]
   product: Product
+}
+
+type Address {
+  city: String!
+  country: String!
+  postalCode: String!
+  street: String!
 }
 
 "A connection to a list of items."
@@ -43,9 +50,35 @@ type Category {
   subCategories: [Category]
 }
 
+type Channel {
+  description: String
+  id: ID!
+  name: String!
+}
+
 type CreateCategoryPayload {
   category: Category
   errors: [CreateCategoryError!]
+}
+
+type CreateDiscountRulePayload {
+  discountRule: DiscountRule
+  errors: [CreateDiscountRuleError!]
+}
+
+type CreateItemPayload {
+  errors: [CreateItemError!]
+  item: Item
+}
+
+type CreateLocationPayload {
+  errors: [CreateLocationError!]
+  location: Location
+}
+
+type CreateMovementPayload {
+  errors: [CreateMovementError!]
+  movement: Movement
 }
 
 type CreateProductPayload {
@@ -53,14 +86,73 @@ type CreateProductPayload {
   product: Product
 }
 
+type CreateProductPricePayload {
+  errors: [CreateProductPriceError!]
+  productPrice: ProductPrice
+}
+
 type DeleteCategoryPayload {
   boolean: Boolean
   errors: [DeleteCategoryError!]
 }
 
+type DeleteDiscountRulePayload {
+  boolean: Boolean
+  errors: [DeleteDiscountRuleError!]
+}
+
+type DeleteItemPayload {
+  boolean: Boolean
+  errors: [DeleteItemError!]
+}
+
+type DeleteLocationPayload {
+  boolean: Boolean
+  errors: [DeleteLocationError!]
+}
+
+type DeleteMovementPayload {
+  boolean: Boolean
+  errors: [DeleteMovementError!]
+}
+
 type DeleteProductPayload {
   boolean: Boolean
   errors: [DeleteProductError!]
+}
+
+type DeleteProductPricePayload {
+  boolean: Boolean
+  errors: [DeleteProductPriceError!]
+}
+
+type DiscountRule {
+  channel: Channel!
+  condition: String!
+  discountPercentage: Decimal!
+  effectiveFrom: DateTime!
+  effectiveTo: DateTime!
+  id: ID!
+  productCategoryId: ID
+  productVariantId: ID
+}
+
+"A connection to a list of items."
+type DiscountRulesConnection {
+  "A list of edges."
+  edges: [DiscountRulesEdge!]
+  "A flattened list of the nodes."
+  nodes: [DiscountRule!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type DiscountRulesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: DiscountRule!
 }
 
 type EditCategoryPayload {
@@ -73,15 +165,120 @@ type EditProductPayload {
   product: Product
 }
 
+type Item {
+  expiryDate: Date
+  id: ID!
+  location: Location!
+  productVariantId: ID!
+  quantity: Int!
+}
+
+"A connection to a list of items."
+type ItemsConnection {
+  "A list of edges."
+  edges: [ItemsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Item!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ItemsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Item!
+}
+
+type Location {
+  address: Address!
+  id: ID!
+  locationType: LocationType!
+  name: String!
+}
+
+type LocationType {
+  description: String
+  id: ID!
+  name: String!
+}
+
+"A connection to a list of items."
+type LocationsConnection {
+  "A list of edges."
+  edges: [LocationsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Location!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type LocationsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Location!
+}
+
+type Movement {
+  id: ID!
+  item: Item!
+  location: Location!
+  movementDate: DateTime!
+  movementType: MovementType!
+  quantity: Int!
+}
+
+type MovementType {
+  description: String
+  id: ID!
+  name: String!
+}
+
+"A connection to a list of items."
+type MovementsConnection {
+  "A list of edges."
+  edges: [MovementsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Movement!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type MovementsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Movement!
+}
+
 type Mutation {
   addProductVariant(input: AddProductVariantInput!): AddProductVariantPayload!
   addProductVariantAttribute(input: AddProductVariantAttributeInput!): AddProductVariantAttributePayload!
   createCategory(input: CreateCategoryInput!): CreateCategoryPayload!
+  createDiscountRule(input: CreateDiscountRuleInput!): CreateDiscountRulePayload!
+  createItem(input: CreateItemInput!): CreateItemPayload!
+  createLocation(input: CreateLocationInput!): CreateLocationPayload!
+  createMovement(input: CreateMovementInput!): CreateMovementPayload!
   createProduct(input: CreateProductInput!): CreateProductPayload!
+  createProductPrice(input: CreateProductPriceInput!): CreateProductPricePayload!
   deleteCategory(input: DeleteCategoryInput!): DeleteCategoryPayload!
+  deleteDiscountRule(input: DeleteDiscountRuleInput!): DeleteDiscountRulePayload!
+  deleteItem(input: DeleteItemInput!): DeleteItemPayload!
+  deleteLocation(input: DeleteLocationInput!): DeleteLocationPayload!
+  deleteMovement(input: DeleteMovementInput!): DeleteMovementPayload!
   deleteProduct(input: DeleteProductInput!): DeleteProductPayload!
+  deleteProductPrice(input: DeleteProductPriceInput!): DeleteProductPricePayload!
   editCategory(input: EditCategoryInput!): EditCategoryPayload!
   editProduct(input: EditProductInput!): EditProductPayload!
+  updateDiscountRule(input: UpdateDiscountRuleInput!): UpdateDiscountRulePayload!
+  updateItem(input: UpdateItemInput!): UpdateItemPayload!
+  updateLocation(input: UpdateLocationInput!): UpdateLocationPayload!
+  updateMovement(input: UpdateMovementInput!): UpdateMovementPayload!
+  updateProductPrice(input: UpdateProductPriceInput!): UpdateProductPricePayload!
 }
 
 "Information about pagination in a connection."
@@ -116,26 +313,52 @@ type ProductImage {
   altText: String
   id: ID!
   imageUrl: String!
+  productVariant: [ProductVariant]
   sortOrder: Int!
-  variantId: ID!
+}
+
+type ProductPrice {
+  channel: Channel!
+  effectiveFrom: DateTime!
+  effectiveTo: DateTime!
+  id: ID!
+  price: Price!
+  productVariantId: ID!
+}
+
+"A connection to a list of items."
+type ProductPricesConnection {
+  "A list of edges."
+  edges: [ProductPricesEdge!]
+  "A flattened list of the nodes."
+  nodes: [ProductPrice!]
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+}
+
+"An edge in a connection."
+type ProductPricesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ProductPrice!
 }
 
 type ProductVariant {
   id: ID!
   images: [ProductImage]!
-  ingredients: [String]
   isInStock: Boolean!
   isVisible: Boolean!
   price: Price!
-  productId: ID!
+  product: Product!
   variantAttributes: [ProductVariantAttribute]!
 }
 
 type ProductVariantAttribute {
-  key: ProductVariantTypes!
-  name: String!
-  type: MeasurementType
-  value: Float
+  attributeDefinition: VariantAttributeDefinition
+  id: ID!
+  unitsOfMeasure: UnitsOfMeasure
+  value: String
 }
 
 "A connection to a list of items."
@@ -158,13 +381,69 @@ type ProductsEdge {
 
 type Query {
   categories("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [CategorySortInput!] where: CategoryFilterInput): CategoriesConnection
+  discountRules("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [DiscountRuleSortInput!] where: DiscountRuleFilterInput): DiscountRulesConnection
+  items("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ItemSortInput!] where: ItemFilterInput): ItemsConnection
+  locations("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [LocationSortInput!] where: LocationFilterInput): LocationsConnection
+  movements("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [MovementSortInput!] where: MovementFilterInput): MovementsConnection
+  productPrices("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductPriceSortInput!] where: ProductPriceFilterInput): ProductPricesConnection
   products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductSortInput!] where: ProductFilterInput): ProductsConnection
   userInfo: UserInfoDto!
+}
+
+type Recipe {
+  description: String!
+  id: ID!
+  ingredients: [RecipeIngredient]!
+  instructions: String!
+  isPublished: Boolean!
+  name: String!
+  preparationTimeInMinutes: Int!
+  productVariant: ProductVariant
+}
+
+type RecipeIngredient {
+  id: ID!
+  productVariant: ProductVariant
+  quantity: Float!
+  recipe: Recipe!
+  unitsOfMeasure: UnitsOfMeasure
 }
 
 type ResultError implements Error {
   code: String!
   message: String!
+}
+
+type UnitsOfMeasure {
+  abbreviation: String!
+  description: String
+  id: ID!
+  name: String!
+}
+
+type UpdateDiscountRulePayload {
+  boolean: Boolean
+  errors: [UpdateDiscountRuleError!]
+}
+
+type UpdateItemPayload {
+  boolean: Boolean
+  errors: [UpdateItemError!]
+}
+
+type UpdateLocationPayload {
+  boolean: Boolean
+  errors: [UpdateLocationError!]
+}
+
+type UpdateMovementPayload {
+  boolean: Boolean
+  errors: [UpdateMovementError!]
+}
+
+type UpdateProductPricePayload {
+  boolean: Boolean
+  errors: [UpdateProductPriceError!]
 }
 
 type UserInfoDto {
@@ -174,27 +453,63 @@ type UserInfoDto {
   userName: String
 }
 
+type VariantAttributeDefinition {
+  description: String
+  id: ID!
+  name: String!
+}
+
 union AddProductVariantAttributeError = ResultError
 
 union AddProductVariantError = ResultError
 
 union CreateCategoryError = ResultError
 
+union CreateDiscountRuleError = ResultError
+
+union CreateItemError = ResultError
+
+union CreateLocationError = ResultError
+
+union CreateMovementError = ResultError
+
 union CreateProductError = ResultError
+
+union CreateProductPriceError = ResultError
 
 union DeleteCategoryError = ResultError
 
+union DeleteDiscountRuleError = ResultError
+
+union DeleteItemError = ResultError
+
+union DeleteLocationError = ResultError
+
+union DeleteMovementError = ResultError
+
 union DeleteProductError = ResultError
+
+union DeleteProductPriceError = ResultError
 
 union EditCategoryError = ResultError
 
 union EditProductError = ResultError
 
+union UpdateDiscountRuleError = ResultError
+
+union UpdateItemError = ResultError
+
+union UpdateLocationError = ResultError
+
+union UpdateMovementError = ResultError
+
+union UpdateProductPriceError = ResultError
+
 input AddProductVariantAttributeDtoInput {
-  name: String!
+  attributeDefinitionId: UUID!
   productVariantId: UUID!
-  type: MeasurementType
-  value: Decimal
+  unitsOfMeasureId: UUID
+  value: String!
 }
 
 input AddProductVariantAttributeInput {
@@ -211,6 +526,29 @@ input AddProductVariantInput {
   productVariant: AddProductVariantDtoInput!
 }
 
+input AddressFilterInput {
+  and: [AddressFilterInput!]
+  city: StringOperationFilterInput
+  country: StringOperationFilterInput
+  or: [AddressFilterInput!]
+  postalCode: StringOperationFilterInput
+  street: StringOperationFilterInput
+}
+
+input AddressInput {
+  city: String!
+  country: String!
+  postalCode: String!
+  street: String!
+}
+
+input AddressSortInput {
+  city: SortEnumType
+  country: SortEnumType
+  postalCode: SortEnumType
+  street: SortEnumType
+}
+
 input BooleanOperationFilterInput {
   eq: Boolean
   neq: Boolean
@@ -222,6 +560,7 @@ input CategoryFilterInput {
   name: StringOperationFilterInput
   or: [CategoryFilterInput!]
   parentCategory: CategoryFilterInput
+  parentCategoryId: UuidOperationFilterInput
   products: ListFilterInputTypeOfProductFilterInput
   subCategories: ListFilterInputTypeOfCategoryFilterInput
 }
@@ -230,6 +569,21 @@ input CategorySortInput {
   id: SortEnumType
   name: SortEnumType
   parentCategory: CategorySortInput
+  parentCategoryId: SortEnumType
+}
+
+input ChannelFilterInput {
+  and: [ChannelFilterInput!]
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [ChannelFilterInput!]
+}
+
+input ChannelSortInput {
+  description: SortEnumType
+  id: SortEnumType
+  name: SortEnumType
 }
 
 input CreateCategoryDtoInput {
@@ -238,6 +592,53 @@ input CreateCategoryDtoInput {
 
 input CreateCategoryInput {
   category: CreateCategoryDtoInput!
+}
+
+input CreateDiscountRuleDtoInput {
+  channelId: UUID!
+  condition: String!
+  discountPercentage: Decimal!
+  effectiveFrom: DateTime!
+  effectiveTo: DateTime!
+  productCategoryId: UUID
+  productVariantId: UUID
+}
+
+input CreateDiscountRuleInput {
+  discountRuleDto: CreateDiscountRuleDtoInput!
+}
+
+input CreateItemDtoInput {
+  expiryDate: Date
+  locationId: UUID!
+  productVariantId: UUID!
+  quantity: Int!
+}
+
+input CreateItemInput {
+  itemDto: CreateItemDtoInput!
+}
+
+input CreateLocationDtoInput {
+  address: AddressInput!
+  locationTypeId: UUID!
+  name: String!
+}
+
+input CreateLocationInput {
+  locationDto: CreateLocationDtoInput!
+}
+
+input CreateMovementDtoInput {
+  itemId: UUID!
+  locationId: UUID!
+  movementDate: DateTime!
+  movementTypeId: UUID!
+  quantity: Int!
+}
+
+input CreateMovementInput {
+  movementDto: CreateMovementDtoInput!
 }
 
 input CreateProductDtoInput {
@@ -252,11 +653,54 @@ input CreateProductInput {
   product: CreateProductDtoInput!
 }
 
+input CreateProductPriceDtoInput {
+  channelId: UUID!
+  effectiveFrom: DateTime!
+  effectiveTo: DateTime!
+  price: PriceInput!
+  productPriceId: UUID!
+  productVariantId: UUID!
+}
+
+input CreateProductPriceInput {
+  productPriceDto: CreateProductPriceDtoInput!
+}
+
 input CurrencyOperationFilterInput {
   eq: Currency
   in: [Currency!]
   neq: Currency
   nin: [Currency!]
+}
+
+input DateOperationFilterInput {
+  eq: Date
+  gt: Date
+  gte: Date
+  in: [Date]
+  lt: Date
+  lte: Date
+  neq: Date
+  ngt: Date
+  ngte: Date
+  nin: [Date]
+  nlt: Date
+  nlte: Date
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime]
+  lt: DateTime
+  lte: DateTime
+  neq: DateTime
+  ngt: DateTime
+  ngte: DateTime
+  nin: [DateTime]
+  nlt: DateTime
+  nlte: DateTime
 }
 
 input DecimalOperationFilterInput {
@@ -278,8 +722,54 @@ input DeleteCategoryInput {
   categoryId: UUID!
 }
 
+input DeleteDiscountRuleInput {
+  id: UUID!
+}
+
+input DeleteItemInput {
+  id: UUID!
+}
+
+input DeleteLocationInput {
+  id: UUID!
+}
+
+input DeleteMovementInput {
+  id: UUID!
+}
+
 input DeleteProductInput {
   productId: UUID!
+}
+
+input DeleteProductPriceInput {
+  id: UUID!
+}
+
+input DiscountRuleFilterInput {
+  and: [DiscountRuleFilterInput!]
+  channel: ChannelFilterInput
+  channelId: UuidOperationFilterInput
+  condition: StringOperationFilterInput
+  discountPercentage: DecimalOperationFilterInput
+  effectiveFrom: DateTimeOperationFilterInput
+  effectiveTo: DateTimeOperationFilterInput
+  id: UuidOperationFilterInput
+  or: [DiscountRuleFilterInput!]
+  productCategoryId: UuidOperationFilterInput
+  productVariantId: UuidOperationFilterInput
+}
+
+input DiscountRuleSortInput {
+  channel: ChannelSortInput
+  channelId: SortEnumType
+  condition: SortEnumType
+  discountPercentage: SortEnumType
+  effectiveFrom: SortEnumType
+  effectiveTo: SortEnumType
+  id: SortEnumType
+  productCategoryId: SortEnumType
+  productVariantId: SortEnumType
 }
 
 input EditCategoryDtoInput {
@@ -323,6 +813,26 @@ input IntOperationFilterInput {
   nlte: Int
 }
 
+input ItemFilterInput {
+  and: [ItemFilterInput!]
+  expiryDate: DateOperationFilterInput
+  id: UuidOperationFilterInput
+  location: LocationFilterInput
+  locationId: UuidOperationFilterInput
+  or: [ItemFilterInput!]
+  productVariantId: UuidOperationFilterInput
+  quantity: IntOperationFilterInput
+}
+
+input ItemSortInput {
+  expiryDate: SortEnumType
+  id: SortEnumType
+  location: LocationSortInput
+  locationId: SortEnumType
+  productVariantId: SortEnumType
+  quantity: SortEnumType
+}
+
 input ListFilterInputTypeOfCategoryFilterInput {
   all: CategoryFilterInput
   any: Boolean
@@ -358,18 +868,76 @@ input ListFilterInputTypeOfProductVariantFilterInput {
   some: ProductVariantFilterInput
 }
 
-input ListStringOperationFilterInput {
-  all: StringOperationFilterInput
-  any: Boolean
-  none: StringOperationFilterInput
-  some: StringOperationFilterInput
+input LocationFilterInput {
+  address: AddressFilterInput
+  and: [LocationFilterInput!]
+  id: UuidOperationFilterInput
+  locationType: LocationTypeFilterInput
+  locationTypeId: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [LocationFilterInput!]
 }
 
-input NullableOfMeasurementTypeOperationFilterInput {
-  eq: MeasurementType
-  in: [MeasurementType]
-  neq: MeasurementType
-  nin: [MeasurementType]
+input LocationSortInput {
+  address: AddressSortInput
+  id: SortEnumType
+  locationType: LocationTypeSortInput
+  locationTypeId: SortEnumType
+  name: SortEnumType
+}
+
+input LocationTypeFilterInput {
+  and: [LocationTypeFilterInput!]
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [LocationTypeFilterInput!]
+}
+
+input LocationTypeSortInput {
+  description: SortEnumType
+  id: SortEnumType
+  name: SortEnumType
+}
+
+input MovementFilterInput {
+  and: [MovementFilterInput!]
+  id: UuidOperationFilterInput
+  item: ItemFilterInput
+  itemId: UuidOperationFilterInput
+  location: LocationFilterInput
+  locationId: UuidOperationFilterInput
+  movementDate: DateTimeOperationFilterInput
+  movementType: MovementTypeFilterInput
+  movementTypeId: UuidOperationFilterInput
+  or: [MovementFilterInput!]
+  quantity: IntOperationFilterInput
+}
+
+input MovementSortInput {
+  id: SortEnumType
+  item: ItemSortInput
+  itemId: SortEnumType
+  location: LocationSortInput
+  locationId: SortEnumType
+  movementDate: SortEnumType
+  movementType: MovementTypeSortInput
+  movementTypeId: SortEnumType
+  quantity: SortEnumType
+}
+
+input MovementTypeFilterInput {
+  and: [MovementTypeFilterInput!]
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [MovementTypeFilterInput!]
+}
+
+input MovementTypeSortInput {
+  description: SortEnumType
+  id: SortEnumType
+  name: SortEnumType
 }
 
 input PriceFilterInput {
@@ -377,6 +945,16 @@ input PriceFilterInput {
   and: [PriceFilterInput!]
   currency: CurrencyOperationFilterInput
   or: [PriceFilterInput!]
+}
+
+input PriceInput {
+  amount: Decimal!
+  currency: Currency!
+}
+
+input PriceSortInput {
+  amount: SortEnumType
+  currency: SortEnumType
 }
 
 input ProductFilterInput {
@@ -398,8 +976,31 @@ input ProductImageFilterInput {
   id: UuidOperationFilterInput
   imageUrl: StringOperationFilterInput
   or: [ProductImageFilterInput!]
+  productVariant: ProductVariantFilterInput
+  productVariantId: UuidOperationFilterInput
   sortOrder: IntOperationFilterInput
-  variantId: UuidOperationFilterInput
+}
+
+input ProductPriceFilterInput {
+  and: [ProductPriceFilterInput!]
+  channel: ChannelFilterInput
+  channelId: UuidOperationFilterInput
+  effectiveFrom: DateTimeOperationFilterInput
+  effectiveTo: DateTimeOperationFilterInput
+  id: UuidOperationFilterInput
+  or: [ProductPriceFilterInput!]
+  price: PriceFilterInput
+  productVariantId: UuidOperationFilterInput
+}
+
+input ProductPriceSortInput {
+  channel: ChannelSortInput
+  channelId: SortEnumType
+  effectiveFrom: SortEnumType
+  effectiveTo: SortEnumType
+  id: SortEnumType
+  price: PriceSortInput
+  productVariantId: SortEnumType
 }
 
 input ProductSortInput {
@@ -420,31 +1021,26 @@ input ProductTypeOperationFilterInput {
 
 input ProductVariantAttributeFilterInput {
   and: [ProductVariantAttributeFilterInput!]
-  key: ProductVariantTypesOperationFilterInput
-  name: StringOperationFilterInput
+  attributeDefinition: VariantAttributeDefinitionFilterInput
+  attributeDefinitionId: UuidOperationFilterInput
+  id: UuidOperationFilterInput
   or: [ProductVariantAttributeFilterInput!]
-  type: NullableOfMeasurementTypeOperationFilterInput
-  value: DecimalOperationFilterInput
+  unitsOfMeasure: UnitsOfMeasureFilterInput
+  unitsOfMeasureId: UuidOperationFilterInput
+  value: StringOperationFilterInput
 }
 
 input ProductVariantFilterInput {
   and: [ProductVariantFilterInput!]
   id: UuidOperationFilterInput
   images: ListFilterInputTypeOfProductImageFilterInput
-  ingredients: ListStringOperationFilterInput
   isInStock: BooleanOperationFilterInput
   isVisible: BooleanOperationFilterInput
   or: [ProductVariantFilterInput!]
   price: PriceFilterInput
+  product: ProductFilterInput
   productId: UuidOperationFilterInput
   variantAttributes: ListFilterInputTypeOfProductVariantAttributeFilterInput
-}
-
-input ProductVariantTypesOperationFilterInput {
-  eq: ProductVariantTypes
-  in: [ProductVariantTypes!]
-  neq: ProductVariantTypes
-  nin: [ProductVariantTypes!]
 }
 
 input StringOperationFilterInput {
@@ -462,6 +1058,79 @@ input StringOperationFilterInput {
   startsWith: String
 }
 
+input UnitsOfMeasureFilterInput {
+  abbreviation: StringOperationFilterInput
+  and: [UnitsOfMeasureFilterInput!]
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [UnitsOfMeasureFilterInput!]
+}
+
+input UpdateDiscountRuleDtoInput {
+  channelId: UUID
+  condition: String
+  discountPercentage: Decimal
+  discountRuleId: UUID!
+  effectiveFrom: DateTime
+  effectiveTo: DateTime
+  productCategoryId: UUID
+  productVariantId: UUID
+}
+
+input UpdateDiscountRuleInput {
+  discountRuleDto: UpdateDiscountRuleDtoInput!
+}
+
+input UpdateItemDtoInput {
+  expiryDate: Date
+  itemId: UUID!
+  locationId: UUID
+  productVariantId: UUID
+  quantity: Int
+}
+
+input UpdateItemInput {
+  itemDto: UpdateItemDtoInput!
+}
+
+input UpdateLocationDtoInput {
+  address: AddressInput
+  locationId: UUID!
+  locationTypeId: UUID
+  name: String
+}
+
+input UpdateLocationInput {
+  locationDto: UpdateLocationDtoInput!
+}
+
+input UpdateMovementDtoInput {
+  itemId: UUID
+  locationId: UUID
+  movementDate: DateTime
+  movementId: UUID!
+  movementTypeId: UUID
+  quantity: Int
+}
+
+input UpdateMovementInput {
+  movementDto: UpdateMovementDtoInput!
+}
+
+input UpdateProductPriceDtoInput {
+  channelId: UUID
+  effectiveFrom: DateTime
+  effectiveTo: DateTime
+  price: PriceInput
+  productPriceId: UUID!
+  productVariantId: UUID
+}
+
+input UpdateProductPriceInput {
+  productPriceDto: UpdateProductPriceDtoInput!
+}
+
 input UuidOperationFilterInput {
   eq: UUID
   gt: UUID
@@ -475,6 +1144,14 @@ input UuidOperationFilterInput {
   nin: [UUID]
   nlt: UUID
   nlte: UUID
+}
+
+input VariantAttributeDefinitionFilterInput {
+  and: [VariantAttributeDefinitionFilterInput!]
+  description: StringOperationFilterInput
+  id: UuidOperationFilterInput
+  name: StringOperationFilterInput
+  or: [VariantAttributeDefinitionFilterInput!]
 }
 
 "Defines when a policy shall be executed."
@@ -492,29 +1169,21 @@ enum Currency {
   USD
 }
 
-enum MeasurementType {
-  GRAMS
-  KILOGRAMS
-  LITERS
-  MILLILITERS
-  UNITS
-}
-
 enum ProductType {
   OFFLINE
   ONLINE
-}
-
-enum ProductVariantTypes {
-  GRINDING
-  ROAST
-  SIZE
 }
 
 enum SortEnumType {
   ASC
   DESC
 }
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
 
 "The built-in `Decimal` scalar type."
 scalar Decimal

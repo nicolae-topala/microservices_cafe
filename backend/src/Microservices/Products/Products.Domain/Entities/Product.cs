@@ -1,7 +1,7 @@
-﻿using Products.Domain.ValueObjects;
-using Shared.BuildingBlocks.Result;
+﻿using Shared.BuildingBlocks.Result;
 using Shared.Enums;
 using Shared.Primitives;
+using Shared.ValueObjects;
 
 namespace Products.Domain.Entities;
 
@@ -12,11 +12,11 @@ public sealed class Product : AggregateRoot
 
     public string Name { get; private set; }
     public string Description { get; private set; }
+    public bool IsVisible { get; private set; }
+    public bool IsInStock { get; private set; }
     public ProductType Type { get; private set; }
     public IReadOnlyCollection<Category> Categories => _categories;
     public IReadOnlyCollection<ProductVariant> Variants => _variants;
-    public bool IsVisible { get; private set; }
-    public bool IsInStock { get; private set; }
 
     private Product() { }
 
@@ -110,7 +110,7 @@ public sealed class Product : AggregateRoot
         List<ProductVariantAttribute> variantAttributes)
     {
         var variant = ProductVariant.Create(
-            Id,
+            this,
             price,
             currency,
             variantAttributes);
@@ -122,5 +122,89 @@ public sealed class Product : AggregateRoot
 
         _variants.Add(variant.Value);
         return Result.Success(variant.Value);
+    }
+
+    public Result<ProductVariant> UpdateVariant(Guid variantId,
+    decimal? price = null,
+    Currency? currency = null,
+    bool? isVisible = null,
+    bool? isInStock = null)
+    {
+        var variant = _variants.FirstOrDefault(v => v.Id == variantId);
+
+        if (variant is null)
+        {
+            return Result.Failure<ProductVariant>(new ResultError("Variant.NotFound", "Product variant with the specified ID does not exist."));
+        }
+
+        if (price.HasValue || currency.HasValue)
+        {
+            var priceResult = variant.AddOrUpdatePrice(price, currency);
+            if (priceResult.IsFailure)
+            {
+                return Result.Failure<ProductVariant>(priceResult.Error);
+            }
+        }
+
+        if (isVisible.HasValue)
+        {
+            variant.SetVisibility(isVisible.Value);
+        }
+
+        if (isInStock.HasValue)
+        {
+            variant.UpdateStockStatus(isInStock.Value);
+        }
+
+        return Result.Success(variant);
+    }
+
+    public Result RemoveVariant(Guid variantId)
+    {
+        var variant = _variants.FirstOrDefault(v => v.Id == variantId);
+
+        if (variant is null)
+        {
+            return Result.Failure(new ResultError("Variant.NotFound", "Product variant with the specified ID does not exist."));
+        }
+
+        _variants.Remove(variant);
+        return Result.Success();
+    }
+
+    public Result<ProductVariant> GetVariant(Guid variantId)
+    {
+        var variant = _variants.FirstOrDefault(v => v.Id == variantId);
+
+        if (variant is null)
+        {
+            return Result.Failure<ProductVariant>(new ResultError("Variant.NotFound", "Product variant with the specified ID does not exist."));
+        }
+
+        return Result.Success(variant);
+    }
+
+    public Result UpdateAllVariantsStockStatus(bool isInStock)
+    {
+        foreach (var variant in _variants)
+        {
+            variant.UpdateStockStatus(isInStock);
+        }
+
+        IsInStock = isInStock;
+        return Result.Success();
+    }
+
+    public bool HasVariants() => _variants.Any();
+
+    public Result<Price> GetLowestPrice()
+    {
+        if (!_variants.Any())
+        {
+            return Result.Failure<Price>(new ResultError("Product.NoVariants", "Product has no variants to determine price."));
+        }
+
+        var lowestPriceVariant = _variants.MinBy(v => v.Price.Amount);
+        return Result.Success(lowestPriceVariant.Price);
     }
 }

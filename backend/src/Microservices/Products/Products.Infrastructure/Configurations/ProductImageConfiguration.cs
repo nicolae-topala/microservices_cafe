@@ -14,7 +14,7 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
         builder.HasKey(x => x.Id);
 
         builder
-            .Property(x => x.VariantId)
+            .Property(x => x.ProductVariantId)
             .IsRequired();
 
         builder
@@ -33,6 +33,6 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
 
         // Indexes
         builder
-            .HasIndex(x => x.VariantId);
+            .HasIndex(x => x.ProductVariantId);
     }
 }

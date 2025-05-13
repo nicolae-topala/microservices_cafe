@@ -40,6 +40,28 @@ services:
     depends_on:
         - mssql
 
+  inventory.api:
+    container_name: inventory_api
+    image: ${DOCKER_REGISTRY-}microservicescafeinventoryapi
+    build:
+      context: .
+      dockerfile: src/Microservices/Inventory/Inventory.API/Dockerfile
+    networks:
+        - microservicescafe_net
+    depends_on:
+        - mssql
+
+  price.api:
+    container_name: price_api
+    image: ${DOCKER_REGISTRY-}microservicescafepriceapi
+    build:
+      context: .
+      dockerfile: src/Microservices/Price/Price.API/Dockerfile
+    networks:
+        - microservicescafe_net
+    depends_on:
+        - mssql
+
   auth.server:
     container_name: auth_server
     image: ${DOCKER_REGISTRY-}authserver

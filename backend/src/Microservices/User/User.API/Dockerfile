@@ -3,10 +3,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 8086
+EXPOSE 8087
 
-# Copy auth server cert and trust it
+#Copy auth server cert and trust it
 USER root
 COPY certificates/localhost.crt /usr/local/share/ca-certificates/
 RUN update-ca-certificates

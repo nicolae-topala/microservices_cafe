@@ -7,7 +7,9 @@
         "products.api": "StartDebugging",
         "gateway.api": "StartDebugging",
         "auth.server": "StartDebugging",
-        "user.api": "StartDebugging"
+        "user.api": "StartDebugging",
+        "inventory.api": "StartDebugging",
+        "price.api": "StartDebugging"
       }
     }
   }

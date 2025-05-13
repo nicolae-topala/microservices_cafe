@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Products.Application.Abstractions;
-using Products.Domain.ValueObjects;
+using Products.Domain.Entities;
 using Products.Shared.Errors;
 using Shared.Abstractions.Messaging.ResultType;
 using Shared.BuildingBlocks.Result;
@@ -8,9 +8,9 @@ using Shared.BuildingBlocks.Result;
 namespace Products.Application.Features.ProductVariants.Commands;
 
 public class AddProductVariantAttributeHandler(IProductsDbContext dbContext)
-    : IResultCommandHandler<AddProductVariantAttributeCommand, ProductVariantAttribute>
+    : IResultCommandHandler<AddProductVariantAttributeCommand>
 {
-    public async Task<Result<ProductVariantAttribute>> Handle(AddProductVariantAttributeCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddProductVariantAttributeCommand request, CancellationToken cancellationToken)
     {
         var productVariant = await dbContext.ProductVariants
             .Include(x => x.VariantAttributes)
@@ -23,20 +23,36 @@ public class AddProductVariantAttributeHandler(IProductsDbContext dbContext)
             return Result.Failure<ProductVariantAttribute>(ProductErrors.NotFound);
         }
 
-        var attributeResult = ProductVariantAttribute.Create(
-            request.ProductVariantAttribute.Name,
-            request.ProductVariantAttribute.Type,
-            request.ProductVariantAttribute.Value);
-
-        if (attributeResult.IsFailure)
+        UnitsOfMeasure? unitsOfMeasure = null;
+        if (request.ProductVariantAttribute.UnitsOfMeasureId != null)
         {
-            return Result.Failure<ProductVariantAttribute>(attributeResult.Error);
+            unitsOfMeasure = await dbContext.UnitsOfMeasures
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                    x.Id == request.ProductVariantAttribute.UnitsOfMeasureId,
+                    cancellationToken);
         }
 
-        productVariant.AddOrUpdateVariantAttribute(attributeResult.Value);
+        var attributeDefinition = await dbContext.VariantAttributeDefinitions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x =>
+                x.Id == request.ProductVariantAttribute.AttributeDefinitionId,
+                cancellationToken);
+
+        if (attributeDefinition is null)
+        {
+            return Result.Failure<ProductVariantAttribute>(ProductErrors.NotFound);
+        }
+
+        var result = productVariant.AddOrUpdateVariantAttribute(attributeDefinition, request.ProductVariantAttribute.Value, unitsOfMeasure);
+
+        if (result.IsFailure)
+        {
+            return Result.Failure<ProductVariantAttribute>(result.Error);
+        }
 
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(attributeResult.Value);
+        return Result.Success(result);
     }
 }
