@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Products.Application.Abstractions;
 using Products.Domain.Entities;
 using Products.Shared.Errors;
 using Shared.Abstractions.Messaging.ResultType;
+using Shared.BuildingBlocks.Outbox;
 using Shared.BuildingBlocks.Result;
+using Shared.Contracts.Product;
 
 namespace Products.Application.Features.Products.Commands.AddProductVariant;
 
@@ -24,8 +27,8 @@ public class AddProductVariantHandler(IProductsDbContext dbContext)
         }
 
         var result = product.AddVariant(
-            request.ProductVariant.Price, 
-            request.ProductVariant.Currency, 
+            request.ProductVariant.Price,
+            request.ProductVariant.Currency,
             new List<ProductVariantAttribute>());
 
         if (result.IsFailure)
@@ -33,8 +36,13 @@ public class AddProductVariantHandler(IProductsDbContext dbContext)
             return Result.Failure<Product>(result.Error);
         }
 
-        await dbContext.ProductVariants
-            .AddAsync(result.Value, cancellationToken);
+        dbContext.ProductVariants.Add(result.Value);
+        dbContext.AddIntegrationEvent(new ProductVariantCreatedEvent
+        {
+            ProductVariantId = result.Value.Id,
+            ProductId = result.Value.ProductId,
+            IsInStock = result.Value.IsInStock,
+        });
 
         await dbContext.SaveChangesAsync(cancellationToken);
 

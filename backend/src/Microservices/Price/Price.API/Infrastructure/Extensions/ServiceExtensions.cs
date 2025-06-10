@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
-using Price.Infrastructure;
+using Price.Application.Abstractions;
 using Quartz;
 using Shared.BuildingBlocks.BackgroundJobs;
 
@@ -33,11 +33,11 @@ public static class ServiceExtensions
 
     public static IServiceCollection RegisterQuartzService(this IServiceCollection services)
     {
-        var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob<PriceDbContext>));
+        var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob<>));
 
         services.AddQuartz(configure =>
         {
-            configure.AddJob<ProcessOutboxMessagesJob<PriceDbContext>>(jobKey)
+            configure.AddJob<ProcessOutboxMessagesJob<IPriceDbContext>>(jobKey)
                     .AddTrigger(trigger =>
                         trigger
                             .ForJob(jobKey)

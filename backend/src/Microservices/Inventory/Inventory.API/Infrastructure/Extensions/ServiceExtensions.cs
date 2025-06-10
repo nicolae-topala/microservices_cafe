@@ -1,4 +1,6 @@
-﻿using Inventory.Infrastructure;
+﻿using Inventory.Application.Abstractions;
+using Inventory.Application.Features.Product.Consumers;
+using Inventory.Infrastructure;
 using MassTransit;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Validation.AspNetCore;
@@ -14,6 +16,8 @@ public static class ServiceExtensions
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+            busConfigurator.AddConsumer<ProductVariantCreatedConsumer>();
 
             busConfigurator.UsingRabbitMq((context, configurator) =>
             {
@@ -32,11 +36,11 @@ public static class ServiceExtensions
 
     public static IServiceCollection RegisterQuartzService(this IServiceCollection services)
     {
-        var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob<InventoryDbContext>));
+        var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob<>));
 
         services.AddQuartz(configure =>
         {
-            configure.AddJob<ProcessOutboxMessagesJob<InventoryDbContext>>(jobKey)
+            configure.AddJob<ProcessOutboxMessagesJob<IInventoryDbContext>>(jobKey)
                     .AddTrigger(trigger =>
                         trigger
                             .ForJob(jobKey)

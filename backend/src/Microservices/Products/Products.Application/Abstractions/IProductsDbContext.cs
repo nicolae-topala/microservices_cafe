@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Products.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+using Shared.Abstractions;
 
 namespace Products.Application.Abstractions;
 
-public interface IProductsDbContext
+public interface IProductsDbContext : IDbContext, IHasOutboxMessages
 {
     DbSet<Product> Products { get; }
     DbSet<ProductVariant> ProductVariants { get; }
@@ -15,7 +15,4 @@ public interface IProductsDbContext
     DbSet<RecipeIngredient> RecipeIngredients { get; }
     DbSet<UnitsOfMeasure> UnitsOfMeasures { get; }
     DbSet<VariantAttributeDefinition> VariantAttributeDefinitions { get; }
-    DatabaseFacade Database { get; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

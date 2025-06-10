@@ -36,6 +36,7 @@ public class ConvertDomainEventsToOutboxMessagesInterceptor : SaveChangesInterce
                 Id = Guid.NewGuid(),
                 OccurredOnUtc = DateTime.UtcNow,
                 Type = domainEvent.GetType().Name,
+                EventType = EventType.Domain,
                 Content = JsonConvert.SerializeObject(
                     domainEvent,
                     new JsonSerializerSettings

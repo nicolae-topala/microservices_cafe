@@ -9,6 +9,12 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    volumes:
+      - ./.containers/queue/data/:/var/lib/rabbitmq
+      - ./.containers/queue/log/:/var/log/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     networks:
         - microservicescafe_net
 

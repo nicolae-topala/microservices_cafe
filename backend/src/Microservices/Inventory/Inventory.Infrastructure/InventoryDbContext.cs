@@ -1,6 +1,7 @@
 ﻿using Inventory.Application.Abstractions;
 using Inventory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Shared.BuildingBlocks.Outbox;
 
 namespace Inventory.Infrastructure;
 
@@ -12,6 +13,7 @@ public class InventoryDbContext(DbContextOptions<InventoryDbContext> options)
     public DbSet<MovementType> MovementTypes => Set<MovementType>();
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<LocationType> LocationTypes => Set<LocationType>();
+    public DbSet<OutboxMessage> OutboxMessage => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) =>
         modelBuilder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);

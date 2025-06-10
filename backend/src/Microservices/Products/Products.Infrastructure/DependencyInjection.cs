@@ -20,8 +20,8 @@ public static class DependencyInjection
         {
             var inteceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
 
-            options.UseSqlServer(connectionString);
-                //.AddInterceptors(inteceptor);
+            options.UseSqlServer(connectionString)
+                .AddInterceptors(inteceptor);
         });
 
         // Abstract DbContext creation from the DbContextFactory
