@@ -37,7 +37,7 @@ public class AddProductVariantHandler(IProductsDbContext dbContext)
         }
 
         dbContext.ProductVariants.Add(result.Value);
-        dbContext.AddIntegrationEvent(new ProductVariantCreatedEvent
+        dbContext.AddIntegrationEvent(new ProductVariantCreatedIntegrationEvent
         {
             ProductVariantId = result.Value.Id,
             ProductId = result.Value.ProductId,

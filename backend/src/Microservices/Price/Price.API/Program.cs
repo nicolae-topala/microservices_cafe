@@ -1,6 +1,7 @@
 using Price.API.Infrastructure.Extensions;
 using Price.Application;
 using Price.Infrastructure;
+using Shared.BuildingBlocks.WebHost;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MigrateDbContext<PriceDbContext>();
 
 app.MapGraphQL();
 

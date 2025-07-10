@@ -11,13 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BananaCakePop.Services" Version="13.9.0" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="13.9.12" />
-    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.12" />
-    <PackageReference Include="HotChocolate.AspNetCore.CommandLine" Version="13.9.12" />
-    <PackageReference Include="HotChocolate.Fusion" Version="13.9.12" />
-    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
+    <PackageReference Include="BananaCakePop.Services"/>
+    <PackageReference Include="HotChocolate.AspNetCore"/>
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" />
+    <PackageReference Include="HotChocolate.AspNetCore.CommandLine"/>
+    <PackageReference Include="HotChocolate.Fusion"/>
+    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation"/>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets"/>
   </ItemGroup>
 
 </Project>

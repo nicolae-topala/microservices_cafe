@@ -18,7 +18,7 @@ namespace Products.API.Types.Mutations;
 [Authorize]
 public class ProductsMutations
 {
-    [Error<ResultError>]
+    [Error(typeof(ResultError))]
     public async Task<FieldResult<Product>> CreateProduct(ISender sender, CreateProductDto product) =>
         ResultHandler.HandleResponse(await sender.Send(new CreateProductCommand(product)));
 

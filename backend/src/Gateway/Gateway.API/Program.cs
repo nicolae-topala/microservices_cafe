@@ -1,5 +1,3 @@
-using Gateway.API.Infrastructure.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient("Fusion")
@@ -17,10 +15,8 @@ builder.Services
     .AddFusionGatewayServer()
     .ConfigureFromFile(
         "./gateway.fgp",
-        watchFileForUpdates: true);
-
-builder.Services
-    .AddGraphQLServer();
+        watchFileForUpdates: true)
+    .ModifyFusionOptions(x => x.AllowQueryPlan = !builder.Environment.IsProduction());
 
 builder.Services.AddCors(options =>
 {

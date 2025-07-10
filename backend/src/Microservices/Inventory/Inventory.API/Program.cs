@@ -1,6 +1,7 @@
 using Inventory.API.Infrastructure.Extensions;
 using Inventory.Application;
 using Inventory.Infrastructure;
+using Shared.BuildingBlocks.WebHost;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ var app = builder.Build();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MigrateDbContext<InventoryDbContext>();
 
 app.MapGraphQL();
 

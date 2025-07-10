@@ -11,21 +11,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.23.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageReference Include="OpenIddict.AspNetCore" Version="5.8.0" />
-    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="5.8.0" />
-    <PackageReference Include="OpenIddict.Quartz" Version="5.8.0" />
-    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.0" />
+    <PackageReference Include="Azure.Storage.Blobs"/>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"/>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets"/>
+    <PackageReference Include="OpenIddict.AspNetCore"/>
+    <PackageReference Include="OpenIddict.EntityFrameworkCore"/>
+    <PackageReference Include="OpenIddict.Quartz"/>
+    <PackageReference Include="Quartz.Extensions.Hosting"/>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

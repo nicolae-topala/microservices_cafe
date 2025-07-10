@@ -3,6 +3,7 @@ using Auth.Server.Data;
 using Auth.Server.Data.Models;
 using Auth.Server.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Shared.BuildingBlocks.WebHost;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -60,6 +61,8 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MigrateDbContext<ApplicationDbContext>();
 
 app.MapControllers();
 app.MapControllerRoute(

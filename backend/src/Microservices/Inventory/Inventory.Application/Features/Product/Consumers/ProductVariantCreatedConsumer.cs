@@ -9,9 +9,9 @@ namespace Inventory.Application.Features.Product.Consumers;
 public class ProductVariantCreatedConsumer(
     IInventoryDbContext dbContext,
     ILogger<ProductVariantCreatedConsumer> logger) 
-    : IConsumer<ProductVariantCreatedEvent>
+    : IConsumer<ProductVariantCreatedIntegrationEvent>
 {
-    public async Task Consume(ConsumeContext<ProductVariantCreatedEvent> context)
+    public async Task Consume(ConsumeContext<ProductVariantCreatedIntegrationEvent> context)
     {
         var message = context.Message;
         

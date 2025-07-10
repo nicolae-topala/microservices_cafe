@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.10.0" />
-    <PackageReference Include="HotChocolate" Version="14.0.0" />
-    <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="MassTransit" Version="8.4.1" />
-    <PackageReference Include="MediatR" Version="12.4.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Quartz" Version="3.13.0" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch"/>
+    <PackageReference Include="FluentValidation"/>
+    <PackageReference Include="HotChocolate"/>
+    <PackageReference Include="Mapster"/>
+    <PackageReference Include="MassTransit"/>
+    <PackageReference Include="MediatR"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
+    <PackageReference Include="Newtonsoft.Json"/>
+    <PackageReference Include="Polly"/>
+    <PackageReference Include="Quartz"/>
   </ItemGroup>
 
 </Project>

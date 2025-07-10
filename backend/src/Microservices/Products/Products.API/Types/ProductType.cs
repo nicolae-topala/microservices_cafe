@@ -19,7 +19,7 @@ public class ProductType : ObjectType<Product>
             .Type<NonNullType<StringType>>();
 
         descriptor.Field(p => p.Variants)
-            .Type<NonNullType<ListType<ProductVariantType>>>();
+            .Type<ListType<ProductVariantType>>();
 
         descriptor.Field(p => p.Type)
             .Type<NonNullType<EnumType<PType>>>();

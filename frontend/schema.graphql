@@ -1,4 +1,4 @@
-﻿schema {
+schema {
   query: Query
   mutation: Mutation
 }
@@ -48,6 +48,12 @@ type Category {
   parentCategory: Category
   products: [Product]!
   subCategories: [Category]
+}
+
+type CategoryDocument {
+  id: UUID!
+  name: String!
+  parentCategoryId: UUID
 }
 
 type Channel {
@@ -306,7 +312,18 @@ type Product {
   isVisible: Boolean!
   name: String!
   type: ProductType!
-  variants: [ProductVariant]!
+  variants: [ProductVariant]
+}
+
+type ProductDocument {
+  categories: [CategoryDocument!]!
+  description: String!
+  id: UUID!
+  isInStock: Boolean!
+  isVisible: Boolean!
+  name: String!
+  type: ProductType!
+  variants: [ProductVariantDocument!]!
 }
 
 type ProductImage {
@@ -361,6 +378,23 @@ type ProductVariantAttribute {
   value: String
 }
 
+type ProductVariantAttributeDocument {
+  attributeName: String!
+  id: UUID!
+  unitsOfMeasureAbbreviation: String
+  unitsOfMeasureName: String
+  value: String!
+}
+
+type ProductVariantDocument {
+  id: UUID!
+  isInStock: Boolean!
+  isVisible: Boolean!
+  priceAmount: Decimal!
+  priceCurrency: String!
+  variantAttributes: [ProductVariantAttributeDocument!]!
+}
+
 "A connection to a list of items."
 type ProductsConnection {
   "A list of edges."
@@ -387,6 +421,7 @@ type Query {
   movements("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [MovementSortInput!] where: MovementFilterInput): MovementsConnection
   productPrices("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductPriceSortInput!] where: ProductPriceFilterInput): ProductPricesConnection
   products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductSortInput!] where: ProductFilterInput): ProductsConnection
+  searchProductsByName(categoryIds: [UUID!] inStockOnly: Boolean maxPrice: Decimal minPrice: Decimal productName: String! skip: Int take: Int variantAttributes: [KeyValuePairOfStringAndStringInput!]): [ProductDocument!]!
   userInfo: UserInfoDto!
 }
 
@@ -609,7 +644,7 @@ input CreateDiscountRuleInput {
 }
 
 input CreateItemDtoInput {
-  expiryDate: Date
+  expiryDate: LocalDate
   locationId: UUID!
   productVariantId: UUID!
   quantity: Int!
@@ -671,21 +706,6 @@ input CurrencyOperationFilterInput {
   in: [Currency!]
   neq: Currency
   nin: [Currency!]
-}
-
-input DateOperationFilterInput {
-  eq: Date
-  gt: Date
-  gte: Date
-  in: [Date]
-  lt: Date
-  lte: Date
-  neq: Date
-  ngt: Date
-  ngte: Date
-  nin: [Date]
-  nlt: Date
-  nlte: Date
 }
 
 input DateTimeOperationFilterInput {
@@ -815,7 +835,7 @@ input IntOperationFilterInput {
 
 input ItemFilterInput {
   and: [ItemFilterInput!]
-  expiryDate: DateOperationFilterInput
+  expiryDate: LocalDateOperationFilterInput
   id: UuidOperationFilterInput
   location: LocationFilterInput
   locationId: UuidOperationFilterInput
@@ -831,6 +851,11 @@ input ItemSortInput {
   locationId: SortEnumType
   productVariantId: SortEnumType
   quantity: SortEnumType
+}
+
+input KeyValuePairOfStringAndStringInput {
+  key: String!
+  value: String!
 }
 
 input ListFilterInputTypeOfCategoryFilterInput {
@@ -866,6 +891,21 @@ input ListFilterInputTypeOfProductVariantFilterInput {
   any: Boolean
   none: ProductVariantFilterInput
   some: ProductVariantFilterInput
+}
+
+input LocalDateOperationFilterInput {
+  eq: LocalDate
+  gt: LocalDate
+  gte: LocalDate
+  in: [LocalDate]
+  lt: LocalDate
+  lte: LocalDate
+  neq: LocalDate
+  ngt: LocalDate
+  ngte: LocalDate
+  nin: [LocalDate]
+  nlt: LocalDate
+  nlte: LocalDate
 }
 
 input LocationFilterInput {
@@ -1083,7 +1123,7 @@ input UpdateDiscountRuleInput {
 }
 
 input UpdateItemDtoInput {
-  expiryDate: Date
+  expiryDate: LocalDate
   itemId: UUID!
   locationId: UUID
   productVariantId: UUID
@@ -1179,13 +1219,19 @@ enum SortEnumType {
   DESC
 }
 
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
 "The `Date` scalar represents an ISO-8601 compliant date type."
 scalar Date
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
 
-"The built-in `Decimal` scalar type."
+"The `Decimal` scalar type represents a decimal floating-point number."
 scalar Decimal
+
+"The `LocalDate` scalar type represents a ISO date string, represented as UTF-8 character sequences YYYY-MM-DD. The scalar follows the specification defined in RFC3339"
+scalar LocalDate
 
 scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

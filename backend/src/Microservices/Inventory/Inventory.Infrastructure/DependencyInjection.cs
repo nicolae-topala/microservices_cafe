@@ -14,14 +14,25 @@ public static class DependencyInjection
     public static IServiceCollection RegisterInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("InvetoryDbConnectionString");
+        services.RegisterDbContext(configuration);
+
+        services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
+
+        return services;
+    }
+
+    private static IServiceCollection RegisterDbContext(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("InventoryDbConnectionString");
 
         services.AddPooledDbContextFactory<InventoryDbContext>((sp, options) =>
         {
-            var inteceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>();
+            var inteceptor = sp.GetService<ConvertDomainEventsToOutboxMessagesInterceptor>()
+                ?? throw new InvalidOperationException("OutboxMessagesInterceptor is not configured.");
 
-            options.UseSqlServer(connectionString);
-            //.AddInterceptors(inteceptor);
+            options.UseSqlServer(connectionString)
+                .AddInterceptors(inteceptor);
         });
 
         // Abstract DbContext creation from the DbContextFactory

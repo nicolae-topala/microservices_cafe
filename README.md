@@ -9,6 +9,18 @@ If you have Git you can add the following User Env Path to use the OpenSSL from 
 
 ## Intial setup
 1) From `scripts` folder run `generate_certificates` to generate and trust a https certificate.
+2) In the `backend` folder you will have to create a `.env` file and paste the following variables:
+```
+AUTH_DB_CONNECTIONSTRING=Server=mssql,1433; Database=authDb; User Id=sa; Password=Passw@rd!; TrustServerCertificate=True
+PRODUCTS_DB_CONNECTIONSTRING=Server=mssql,1433; Database=products; User Id=sa; Password=Passw@rd!; TrustServerCertificate=True
+INVENTORY_DB_CONNECTIONSTRING=Server=mssql,1433; Database=inventory; User Id=sa; Password=Passw@rd!; TrustServerCertificate=True
+PRICE_DB_CONNECTIONSTRING=Server=mssql,1433; Database=price; User Id=sa; Password=Passw@rd!; TrustServerCertificate=True
+
+OPENIDDICT_ISSUER=https://localhost:8085
+OPENIDDICT_ENCRYPTION_KEY=DRjd/GnduI3Efzen9V9BvbNUfc/VKgXltV7Kbk9sMkY=
+
+ELASTICSEARCH_URL=http://elasticsearch:9200
+```
 
 ## Fusion
 After making changes to any of the microservices graphs you will have to generate and compose them again for the gateway.  

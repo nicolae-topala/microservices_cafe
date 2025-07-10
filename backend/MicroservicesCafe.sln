@@ -67,6 +67,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Price.Infrastructure", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Price.Shared", "src\Microservices\Price\Price.Shared\Price.Shared.csproj", "{825803BE-5EA6-45A4-881D-99AB6EE089BE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C64C662A-227B-4B29-975D-90B357D5270A}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

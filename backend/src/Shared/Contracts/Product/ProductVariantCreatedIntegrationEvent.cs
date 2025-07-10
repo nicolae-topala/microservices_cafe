@@ -2,7 +2,7 @@
 
 namespace Shared.Contracts.Product;
 
-public class ProductVariantCreatedEvent : IIntegrationEvent
+public class ProductVariantCreatedIntegrationEvent : IIntegrationEvent
 {
     public Guid ProductId { get; set; }
     public Guid ProductVariantId { get; set; }

@@ -1,4 +1,5 @@
-﻿using Shared.BuildingBlocks.Result;
+﻿using Products.Domain.Events.ProductVariant;
+using Shared.BuildingBlocks.Result;
 using Shared.Enums;
 using Shared.Errors;
 using Shared.Primitives;
@@ -45,7 +46,8 @@ public sealed class ProductVariant : BaseEntity
             return Result.Failure<ProductVariant>(priceResult.Error);
         }
 
-        return Result.Success(new ProductVariant(product, priceResult.Value, variantAttributes));
+        var newProductVariant = new ProductVariant(product, priceResult.Value, variantAttributes);
+        return Result.Success(newProductVariant);
     }
 
     public void UpdateStockStatus(bool isInStock)

@@ -1,4 +1,6 @@
-﻿using Shared.BuildingBlocks.Result;
+﻿using Products.Domain.Events.Product;
+using Products.Domain.Events.ProductVariant;
+using Shared.BuildingBlocks.Result;
 using Shared.Enums;
 using Shared.Primitives;
 using Shared.ValueObjects;
@@ -32,6 +34,8 @@ public sealed class Product : AggregateRoot
         _categories.AddRange(categories);
         IsVisible = false;
         IsInStock = false;
+
+        RaiseDomainEvent(new ProductCreatedEvent(Id));
     }
 
     public static Result<Product> Create(
@@ -77,6 +81,7 @@ public sealed class Product : AggregateRoot
             IsInStock = isInStock.Value;
         }
 
+        RaiseDomainEvent(new ProductUpdatedEvent(Id));
         return Result.Success(this);
     }
 
@@ -121,14 +126,16 @@ public sealed class Product : AggregateRoot
         }
 
         _variants.Add(variant.Value);
+        RaiseDomainEvent(new ProductVariantCreatedEvent(Id, variant.Value.Id));
+
         return Result.Success(variant.Value);
     }
 
     public Result<ProductVariant> UpdateVariant(Guid variantId,
-    decimal? price = null,
-    Currency? currency = null,
-    bool? isVisible = null,
-    bool? isInStock = null)
+        decimal? price = null,
+        Currency? currency = null,
+        bool? isVisible = null,
+        bool? isInStock = null)
     {
         var variant = _variants.FirstOrDefault(v => v.Id == variantId);
 
@@ -156,6 +163,7 @@ public sealed class Product : AggregateRoot
             variant.UpdateStockStatus(isInStock.Value);
         }
 
+        RaiseDomainEvent(new ProductVariantUpdatedEvent(Id, variant.Id));
         return Result.Success(variant);
     }
 
