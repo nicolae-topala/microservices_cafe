@@ -21,19 +21,15 @@ const handleI18nRouting = createMiddleware(routing);
 
 const authMiddleware = auth((req) => {
     const { nextUrl } = req;
-    // Check if the user is authenticated (i.e., if the 'auth' property exists in the request)
     const isAuthenticated = !!req.auth;
-    const isPublicRoute = testPathnameRegex(PUBLIC_ROUTES, nextUrl.pathname);
     const isSignInRoute = testPathnameRegex(SIGN_IN, nextUrl.pathname);
 
-    // If the route is sign in and the user is authenticated, redirect them to the root default page
     if (isAuthenticated && isSignInRoute) {
         const newUrl = new URL(DEFAULT_REDIRECT, nextUrl.origin);
         return NextResponse.redirect(newUrl);
     }
 
-    // If the route is not public and the user is not authenticated, redirect them to the login page
-    if (!isAuthenticated && !isPublicRoute) {
+    if (!isAuthenticated && !isSignInRoute) {
         const newUrl = new URL(SIGN_IN, nextUrl.origin);
         return NextResponse.redirect(newUrl);
     }
@@ -46,11 +42,11 @@ const middleware = (req: NextRequest) => {
     const isPublicRoute = testPathnameRegex(PUBLIC_ROUTES, nextUrl.pathname);
 
     if (isPublicRoute) {
-        return handleI18nRouting(req); // Apply internationalization for public pages
+        return handleI18nRouting(req);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (authMiddleware as any)(req); // Apply authentication logic for non-public pages
+    return (authMiddleware as any)(req);
 };
 
 // Read more: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
