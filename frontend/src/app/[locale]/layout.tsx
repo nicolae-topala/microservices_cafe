@@ -2,12 +2,13 @@ import './globals.css';
 import { notFound } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
+import Footer from '@/components/common/footer';
+import { Header } from '@/components/common/header';
+import { ThemeProvider } from '@/components/common/theme-provider';
 import { routing } from '@/i18n/routing';
 import ApolloWrapper from '@/lib/ApolloWrapper';
-
-import Footer from './components/footer';
-import { Header } from './components/header';
 
 import type { Metadata } from 'next';
 
@@ -29,15 +30,24 @@ const RootLayout = async ({
     }
 
     return (
-        <html lang={locale}>
-            <body>
+        <html lang={locale} suppressHydrationWarning>
+            <body className="min-h-screen flex flex-col">
                 <NextIntlClientProvider>
                     <SessionProvider>
-                        <ApolloWrapper>
-                            <Header />
-                            {children}
-                            <Footer />
-                        </ApolloWrapper>
+                        <NuqsAdapter>
+                            <ApolloWrapper>
+                                <ThemeProvider
+                                    attribute="class"
+                                    defaultTheme="light"
+                                    enableSystem
+                                    disableTransitionOnChange
+                                >
+                                    <Header />
+                                    <main className="flex-1">{children}</main>
+                                    <Footer />
+                                </ThemeProvider>
+                            </ApolloWrapper>
+                        </NuqsAdapter>
                     </SessionProvider>
                 </NextIntlClientProvider>
             </body>

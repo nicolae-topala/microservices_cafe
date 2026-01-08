@@ -1,5 +1,4 @@
 ﻿using Shared.BuildingBlocks.Result;
-using Shared.Errors;
 using Shared.Primitives;
 
 namespace Products.Domain.Entities;
@@ -8,13 +7,16 @@ public sealed class ProductVariantAttribute : BaseEntity
 {
     public string Value { get; private set; }
     public Guid AttributeDefinitionId { get; private set; }
-    public Guid UnitsOfMeasureId { get; private set; }
+    public Guid? UnitsOfMeasureId { get; private set; }  
+    public Guid ProductVariantId { get; private set; }
+    public ProductVariant ProductVariant { get; private set; }
     public VariantAttributeDefinition AttributeDefinition { get; private set; }
     public UnitsOfMeasure? UnitsOfMeasure { get; private set; }
 
     private ProductVariantAttribute() { }
 
     private ProductVariantAttribute(
+            ProductVariant productVariant,
             VariantAttributeDefinition attributeDefinition,
             string value,
             UnitsOfMeasure? unitsOfMeasure)
@@ -23,9 +25,13 @@ public sealed class ProductVariantAttribute : BaseEntity
         AttributeDefinitionId = attributeDefinition.Id;
         Value = value;
         UnitsOfMeasure = unitsOfMeasure;
+        UnitsOfMeasureId = unitsOfMeasure?.Id;
+        ProductVariant = productVariant;
+        ProductVariantId = productVariant.Id;
     }
 
     public static Result<ProductVariantAttribute> Create(
+        ProductVariant productVariant,
         VariantAttributeDefinition attributeDefinition,
         string value,
         UnitsOfMeasure? unitsOfMeasure = null)
@@ -40,7 +46,7 @@ public sealed class ProductVariantAttribute : BaseEntity
             return Result.Failure<ProductVariantAttribute>(new ResultError("Attribute.EmptyValue", "Attribute value cannot be empty."));
         }
 
-        return Result.Success(new ProductVariantAttribute(attributeDefinition, value, unitsOfMeasure));
+        return Result.Success(new ProductVariantAttribute(productVariant, attributeDefinition, value, unitsOfMeasure));
     }
 
     public Result UpdateValue(string value)
@@ -57,6 +63,7 @@ public sealed class ProductVariantAttribute : BaseEntity
     public Result UpdateUnitsOfMeasure(UnitsOfMeasure? unitsOfMeasure)
     {
         UnitsOfMeasure = unitsOfMeasure;
+        UnitsOfMeasureId = unitsOfMeasure?.Id; 
         return Result.Success();
     }
 
@@ -107,6 +114,7 @@ public sealed class ProductVariantAttribute : BaseEntity
     public Result<ProductVariantAttribute> Clone()
     {
         return Create(
+            ProductVariant,
             AttributeDefinition,
             Value,
             UnitsOfMeasure);

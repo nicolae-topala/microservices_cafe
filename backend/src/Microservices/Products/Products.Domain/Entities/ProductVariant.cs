@@ -1,5 +1,4 @@
-﻿using Products.Domain.Events.ProductVariant;
-using Shared.BuildingBlocks.Result;
+﻿using Shared.BuildingBlocks.Result;
 using Shared.Enums;
 using Shared.Errors;
 using Shared.Primitives;
@@ -87,28 +86,38 @@ public sealed class ProductVariant : BaseEntity
         return Result.Success();
     }
 
-    public void SetVisibility(bool isVisible)
-    {
-        IsVisible = isVisible;
-    }
-
     public Result AddOrUpdateVariantAttribute(VariantAttributeDefinition attributeDefinition, string value, UnitsOfMeasure? unitsOfMeasure = null)
     {
         var existingAttribute = _variantAttributes
-            .FirstOrDefault(a => a.AttributeDefinitionId == attributeDefinition.Id);
+          .FirstOrDefault(a => a.AttributeDefinitionId == attributeDefinition.Id);
 
         if (existingAttribute is not null)
         {
-            _variantAttributes.Remove(existingAttribute);
+            var updateValueResult = existingAttribute.UpdateValue(value);
+            if (updateValueResult.IsFailure)
+            {
+                return Result.Failure(updateValueResult.Error);
+            }
+
+            var updateUnitsResult = existingAttribute.UpdateUnitsOfMeasure(unitsOfMeasure);
+            if (updateUnitsResult.IsFailure)
+            {
+                return Result.Failure(updateUnitsResult.Error);
+            }
+
+            Product.NotifyVariantUpdated(Id);
+            return Result.Success();
         }
 
-        var attributeResult = ProductVariantAttribute.Create(attributeDefinition, value, unitsOfMeasure);
+        var attributeResult = ProductVariantAttribute.Create(this, attributeDefinition, value, unitsOfMeasure);
         if (attributeResult.IsFailure)
         {
             return Result.Failure(attributeResult.Error);
         }
 
         _variantAttributes.Add(attributeResult.Value);
+  
+        Product.NotifyVariantUpdated(Id);
         return Result.Success();
     }
 
@@ -168,5 +177,11 @@ public sealed class ProductVariant : BaseEntity
             Price.Amount,
             Price.Currency,
             newAttributes);
+    }
+
+    public void SetVisibility(bool isVisible)
+    {
+        IsVisible = isVisible;
+        Product.NotifyVariantUpdated(Id);
     }
 }

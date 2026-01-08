@@ -24,6 +24,18 @@ type Address {
   street: String!
 }
 
+type AttributeFilter {
+  attributeName: String!
+  id: UUID!
+  values: [AttributeValueFilter!]!
+}
+
+type AttributeValueFilter {
+  count: Int!
+  unitsOfMeasure: String
+  value: String!
+}
+
 "A connection to a list of items."
 type CategoriesConnection {
   "A list of edges."
@@ -54,6 +66,12 @@ type CategoryDocument {
   id: UUID!
   name: String!
   parentCategoryId: UUID
+}
+
+type CategoryFilter {
+  count: Int!
+  id: UUID!
+  name: String!
 }
 
 type Channel {
@@ -304,6 +322,19 @@ type Price {
   currency: Currency!
 }
 
+type PriceRangeBucket {
+  count: Int!
+  from: Decimal!
+  label: String!
+  to: Decimal!
+}
+
+type PriceRangeFilter {
+  buckets: [PriceRangeBucket!]!
+  maxPrice: Float
+  minPrice: Float
+}
+
 type Product {
   categories: [Category]!
   description: String!
@@ -421,7 +452,9 @@ type Query {
   movements("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [MovementSortInput!] where: MovementFilterInput): MovementsConnection
   productPrices("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductPriceSortInput!] where: ProductPriceFilterInput): ProductPricesConnection
   products("Returns the elements in the list that come after the specified cursor." after: String "Returns the elements in the list that come before the specified cursor." before: String "Returns the first _n_ elements from the list." first: Int "Returns the last _n_ elements from the list." last: Int order: [ProductSortInput!] where: ProductFilterInput): ProductsConnection
-  searchProductsByName(categoryIds: [UUID!] inStockOnly: Boolean maxPrice: Decimal minPrice: Decimal productName: String! skip: Int take: Int variantAttributes: [KeyValuePairOfStringAndStringInput!]): [ProductDocument!]!
+  searchProducts(categoryIds: [UUID!] inStockOnly: Boolean maxPrice: Float minPrice: Float productName: String! skip: Int take: Int variantAttributes: [KeyValuePairOfStringAndStringInput!]): [ProductDocument!]!
+  searchProductsByName(productName: String! skip: Int! take: Int!): [ProductDocument!]!
+  searchProductsWithFilters(categoryIds: [UUID!] inStockOnly: Boolean maxPrice: Float minPrice: Float productName: String skip: Int! sortBy: SortBy! sortOrder: SortOrder take: Int! variantAttributesIds: [UUID!]): SearchProductsWithFiltersResponse!
   userInfo: UserInfoDto!
 }
 
@@ -447,6 +480,18 @@ type RecipeIngredient {
 type ResultError implements Error {
   code: String!
   message: String!
+}
+
+type SearchFilters {
+  attributes: [AttributeFilter!]!
+  categories: [CategoryFilter!]!
+  priceRange: PriceRangeFilter!
+}
+
+type SearchProductsWithFiltersResponse {
+  filters: SearchFilters
+  products: [ProductDocument!]!
+  totalCount: Long!
 }
 
 type UnitsOfMeasure {
@@ -682,6 +727,8 @@ input CreateProductDtoInput {
   ingredients: [String!]!
   name: String!
   type: ProductType!
+  variantCurrency: Currency!
+  variantPrice: Decimal!
 }
 
 input CreateProductInput {
@@ -1214,7 +1261,18 @@ enum ProductType {
   ONLINE
 }
 
+enum SortBy {
+  NAME
+  POPULARITY
+  PRICE
+}
+
 enum SortEnumType {
+  ASC
+  DESC
+}
+
+enum SortOrder {
   ASC
   DESC
 }
@@ -1233,5 +1291,8 @@ scalar Decimal
 
 "The `LocalDate` scalar type represents a ISO date string, represented as UTF-8 character sequences YYYY-MM-DD. The scalar follows the specification defined in RFC3339"
 scalar LocalDate
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
 
 scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

@@ -1,0 +1,18 @@
+import { useTranslations } from 'next-intl';
+import { ComponentProps } from 'react';
+
+import { Button } from '../ui/button';
+
+interface TButtonProps extends ComponentProps<typeof Button> {
+    namespace: string;
+    messageKey: string;
+    values?: Record<string, string | number>;
+}
+
+const TButton = ({ namespace, messageKey, values, ...props }: TButtonProps) => {
+    const t = useTranslations(namespace);
+
+    return <Button {...props}>{t(messageKey, values)}</Button>;
+};
+
+export default TButton;

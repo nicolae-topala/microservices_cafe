@@ -17,6 +17,18 @@ type AddProductVariantPayload {
   errors: [AddProductVariantError!]
 }
 
+type AttributeFilter {
+  id: UUID!
+  attributeName: String!
+  values: [AttributeValueFilter!]!
+}
+
+type AttributeValueFilter {
+  value: String!
+  count: Int!
+  unitsOfMeasure: String
+}
+
 "A connection to a list of items."
 type CategoriesConnection {
   "Information to aid in pagination."
@@ -47,6 +59,12 @@ type CategoryDocument {
   id: UUID!
   name: String!
   parentCategoryId: UUID
+}
+
+type CategoryFilter {
+  id: UUID!
+  name: String!
+  count: Int!
 }
 
 type CreateCategoryPayload {
@@ -105,6 +123,19 @@ type PageInfo {
 type Price {
   amount: Decimal!
   currency: Currency!
+}
+
+type PriceRangeBucket {
+  from: Decimal!
+  to: Decimal!
+  count: Int!
+  label: String!
+}
+
+type PriceRangeFilter {
+  minPrice: Float
+  maxPrice: Float
+  buckets: [PriceRangeBucket!]!
 }
 
 type Product {
@@ -192,7 +223,9 @@ type ProductsEdge {
 type Query {
   categories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput @cost(weight: "10") order: [CategorySortInput!] @cost(weight: "10")): CategoriesConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 10, sizedFields: [ "edges", "nodes" ], requireOneSlicingArgument: false) @cost(weight: "10")
   products("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ProductFilterInput @cost(weight: "10") order: [ProductSortInput!] @cost(weight: "10")): ProductsConnection @listSize(assumedSize: 50, slicingArguments: [ "first", "last" ], slicingArgumentDefaultValue: 10, sizedFields: [ "edges", "nodes" ], requireOneSlicingArgument: false) @cost(weight: "10")
-  searchProductsByName(productName: String! skip: Int take: Int categoryIds: [UUID!] minPrice: Decimal maxPrice: Decimal inStockOnly: Boolean variantAttributes: [KeyValuePairOfStringAndStringInput!]): [ProductDocument!]! @cost(weight: "10")
+  searchProducts(productName: String! skip: Int take: Int categoryIds: [UUID!] minPrice: Float maxPrice: Float inStockOnly: Boolean variantAttributes: [KeyValuePairOfStringAndStringInput!]): [ProductDocument!]! @cost(weight: "10")
+  searchProductsByName(productName: String! skip: Int! take: Int!): [ProductDocument!]! @cost(weight: "10")
+  searchProductsWithFilters(skip: Int! take: Int! sortBy: SortBy! productName: String categoryIds: [UUID!] minPrice: Float maxPrice: Float inStockOnly: Boolean variantAttributesIds: [UUID!] sortOrder: SortOrder): SearchProductsWithFiltersResponse! @cost(weight: "10")
 }
 
 type Recipe {
@@ -217,6 +250,18 @@ type RecipeIngredient {
 type ResultError implements Error {
   code: String!
   message: String!
+}
+
+type SearchFilters {
+  categories: [CategoryFilter!]!
+  priceRange: PriceRangeFilter!
+  attributes: [AttributeFilter!]!
+}
+
+type SearchProductsWithFiltersResponse {
+  products: [ProductDocument!]!
+  totalCount: Long!
+  filters: SearchFilters
 }
 
 type UnitsOfMeasure {
@@ -306,6 +351,8 @@ input CreateProductDtoInput {
   type: ProductType!
   ingredients: [String!]!
   categoryIds: [UUID!]!
+  variantPrice: Decimal!
+  variantCurrency: Currency!
 }
 
 input CreateProductInput {
@@ -561,9 +608,20 @@ enum ProductType {
   OFFLINE
 }
 
+enum SortBy {
+  NAME
+  PRICE
+  POPULARITY
+}
+
 enum SortEnumType {
   ASC
   DESC
+}
+
+enum SortOrder {
+  DESC
+  ASC
 }
 
 "The authorize directive."
@@ -580,5 +638,8 @@ directive @specifiedBy("The specifiedBy URL points to a human-readable specifica
 
 "The `Decimal` scalar type represents a decimal floating-point number."
 scalar Decimal
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long
 
 scalar UUID @specifiedBy(url: "https:\/\/tools.ietf.org\/html\/rfc4122")

@@ -18,7 +18,7 @@ namespace Products.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -165,7 +165,10 @@ namespace Products.Infrastructure.Migrations
                     b.Property<Guid>("AttributeDefinitionId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UnitsOfMeasureId")
+                    b.Property<Guid>("ProductVariantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UnitsOfMeasureId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Value")
@@ -174,11 +177,11 @@ namespace Products.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttributeDefinitionId")
-                        .IsUnique();
+                    b.HasIndex("AttributeDefinitionId");
 
-                    b.HasIndex("UnitsOfMeasureId")
-                        .IsUnique();
+                    b.HasIndex("ProductVariantId");
+
+                    b.HasIndex("UnitsOfMeasureId");
 
                     b.ToTable("ProductVariantAttribute", (string)null);
                 });
@@ -377,25 +380,26 @@ namespace Products.Infrastructure.Migrations
 
             modelBuilder.Entity("Products.Domain.Entities.ProductVariantAttribute", b =>
                 {
-                    b.HasOne("Products.Domain.Entities.ProductVariant", null)
-                        .WithMany("VariantAttributes")
+                    b.HasOne("Products.Domain.Entities.VariantAttributeDefinition", "AttributeDefinition")
+                        .WithMany()
                         .HasForeignKey("AttributeDefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Products.Domain.Entities.ProductVariant", "ProductVariant")
+                        .WithMany("VariantAttributes")
+                        .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Products.Domain.Entities.VariantAttributeDefinition", "AttributeDefinition")
-                        .WithOne()
-                        .HasForeignKey("Products.Domain.Entities.ProductVariantAttribute", "AttributeDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Products.Domain.Entities.UnitsOfMeasure", "UnitsOfMeasure")
-                        .WithOne()
-                        .HasForeignKey("Products.Domain.Entities.ProductVariantAttribute", "UnitsOfMeasureId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UnitsOfMeasureId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("AttributeDefinition");
+
+                    b.Navigation("ProductVariant");
 
                     b.Navigation("UnitsOfMeasure");
                 });

@@ -4,7 +4,9 @@ using Products.Application.Features.Products.Commands.AddProductVariant;
 using Products.Application.Features.Products.Commands.CreateProduct;
 using Products.Application.Features.Products.Commands.DeleteProduct;
 using Products.Application.Features.Products.Commands.EditProduct;
+using Products.Application.Features.Products.Commands.SetVisibilityProducts;
 using Products.Application.Features.ProductVariants.Commands;
+using Products.Application.Features.ProductVariants.Commands.AddProductVariantAttribute;
 using Products.Domain.Entities;
 using Products.Shared.DTOs.Category;
 using Products.Shared.DTOs.Product;
@@ -37,4 +39,12 @@ public class ProductsMutations
     [Error<ResultError>]
     public async Task<FieldResult<bool>> DeleteProduct(ISender sender, Guid productId) =>
         ResultHandler.HandleResponse(await sender.Send(new DeleteProductCommand(productId)));
+
+    [Error<ResultError>]
+    public async Task<FieldResult<bool>> SetProductsVisibility(ISender sender, SetVisibilityDto request) =>
+        ResultHandler.HandleResponse(await sender.Send(new SetVisibilityProductsCommand(request)));
+
+    [Error<ResultError>]
+    public async Task<FieldResult<bool>> SetProductVariantsVisibility(ISender sender, SetVisibilityDto request) =>
+        ResultHandler.HandleResponse(await sender.Send(new SetVisibilityProductsCommand(request)));
 }

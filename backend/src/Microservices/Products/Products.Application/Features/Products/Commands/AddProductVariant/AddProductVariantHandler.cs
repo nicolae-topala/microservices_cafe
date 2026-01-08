@@ -29,7 +29,7 @@ public class AddProductVariantHandler(IProductsDbContext dbContext)
         var result = product.AddVariant(
             request.ProductVariant.Price,
             request.ProductVariant.Currency,
-            new List<ProductVariantAttribute>());
+            []);
 
         if (result.IsFailure)
         {

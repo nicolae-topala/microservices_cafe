@@ -39,8 +39,8 @@ public class ProductVariantConfiguration : IEntityTypeConfiguration<ProductVaria
 
         builder
             .HasMany(x => x.VariantAttributes)
-            .WithOne()
-            .HasForeignKey(x => x.AttributeDefinitionId)
+            .WithOne(x => x.ProductVariant)
+            .HasForeignKey(x => x.ProductVariantId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

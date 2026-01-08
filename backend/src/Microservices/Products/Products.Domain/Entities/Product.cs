@@ -1,5 +1,6 @@
 ﻿using Products.Domain.Events.Product;
 using Products.Domain.Events.ProductVariant;
+using Products.Shared.DTOs.Product;
 using Shared.BuildingBlocks.Result;
 using Shared.Enums;
 using Shared.Primitives;
@@ -42,11 +43,23 @@ public sealed class Product : AggregateRoot
         string name,
         string description,
         ProductType type,
-        List<Category> categories)
+        List<Category> categories,
+        decimal defaultPrice,
+        Currency defaultCurrency)
     {
         var product = new Product(name, description, type, categories);
+
+        var defaultVariantResult = product.CreateDefaultVariant(defaultPrice, defaultCurrency);
+        if (defaultVariantResult.IsFailure)
+        {
+            return Result.Failure<Product>(defaultVariantResult.Error);
+        }
+
         return Result.Success(product);
     }
+
+    private Result<ProductVariant> CreateDefaultVariant(decimal price, Currency currency) =>
+        AddVariant(price, currency, []);
 
     public Result<Product> Edit(
         string? name = null,
@@ -109,7 +122,7 @@ public sealed class Product : AggregateRoot
         return Result.Success(this);
     }
 
-    public Result<ProductVariant> AddVariant( 
+    public Result<ProductVariant> AddVariant(
         decimal price,
         Currency currency,
         List<ProductVariantAttribute> variantAttributes)
@@ -167,6 +180,11 @@ public sealed class Product : AggregateRoot
         return Result.Success(variant);
     }
 
+    public void NotifyVariantUpdated(Guid variantId)
+    {
+        RaiseDomainEvent(new ProductVariantUpdatedEvent(Id, variantId));
+    }
+
     public Result RemoveVariant(Guid variantId)
     {
         var variant = _variants.FirstOrDefault(v => v.Id == variantId);
@@ -203,16 +221,27 @@ public sealed class Product : AggregateRoot
         return Result.Success();
     }
 
-    public bool HasVariants() => _variants.Any();
+    public bool HasVariants() => _variants.Count != 0;
 
     public Result<Price> GetLowestPrice()
     {
-        if (!_variants.Any())
+        if (!HasVariants())
         {
             return Result.Failure<Price>(new ResultError("Product.NoVariants", "Product has no variants to determine price."));
         }
 
         var lowestPriceVariant = _variants.MinBy(v => v.Price.Amount);
+        if (lowestPriceVariant is null)
+        {
+            return Result.Failure<Price>(new ResultError("Product.NoVariants", "Product has no variants to determine price."));
+        }
+
         return Result.Success(lowestPriceVariant.Price);
+    }
+
+    public void SetVisibility(bool isVisible)
+    {
+        IsVisible = isVisible;
+        RaiseDomainEvent(new ProductUpdatedEvent(Id));
     }
 }

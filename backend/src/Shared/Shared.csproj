@@ -7,18 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Elastic.Clients.Elasticsearch"/>
-    <PackageReference Include="FluentValidation"/>
-    <PackageReference Include="HotChocolate"/>
-    <PackageReference Include="Mapster"/>
-    <PackageReference Include="MassTransit"/>
-    <PackageReference Include="MediatR"/>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
-    <PackageReference Include="Newtonsoft.Json"/>
-    <PackageReference Include="Polly"/>
-    <PackageReference Include="Quartz"/>
+    <PackageReference Include="Elastic.Clients.Elasticsearch" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="HotChocolate" />
+    <PackageReference Include="Mapster" />
+    <PackageReference Include="MassTransit" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Polly" />
+    <PackageReference Include="Quartz" />
   </ItemGroup>
 
 </Project>

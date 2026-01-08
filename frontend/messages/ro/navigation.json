@@ -1,0 +1,24 @@
+{
+    "navbar": {
+        "home": "Acasă",
+        "shop": "Magazin",
+        "menu": "Meniu",
+        "locations": "Locații",
+        "booknow": "Rezervă acum"
+    },
+    "footer":{
+        "about": "Despre noi",
+        "locations": "Locații",
+        "products": "Produse",
+        "coffee": "Cafea",
+        "shipping": "Livrare",
+        "gdpr": "GDPR",
+        "careers": "Cariere",
+        "faq": "Întrebări frecvente",
+        "nutritional_values": "Valori nutriționale",
+        "privacy_policy": "Politica de confidențialitate",
+        "cookies_policy": "Politica de cookies",
+        "terms_conditions": "Termeni și condiții"
+    }
+}
+    

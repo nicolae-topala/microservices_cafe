@@ -2,12 +2,7 @@
 
 public abstract class BaseEntity : IEquatable<BaseEntity>
 {
-    public Guid Id { get; private init; }
-
-    protected BaseEntity()
-    {
-        Id = Guid.NewGuid();
-    }
+    public Guid Id { get; set; }
 
     public static bool operator ==(BaseEntity? first, BaseEntity? second) =>
         first is not null && second is not null && first.Equals(second);

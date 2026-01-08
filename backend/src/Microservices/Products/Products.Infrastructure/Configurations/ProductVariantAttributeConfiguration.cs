@@ -17,16 +17,22 @@ public class ProductVariantAttributeConfiguration : IEntityTypeConfiguration<Pro
             .IsRequired();
 
         // Relationships
-        builder
-            .HasOne(x => x.UnitsOfMeasure)
-            .WithOne()
-            .HasForeignKey<ProductVariantAttribute>(x => x.UnitsOfMeasureId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.ProductVariant)
+            .WithMany(x => x.VariantAttributes)
+            .HasForeignKey(x => x.ProductVariantId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
-        builder
-            .HasOne(x => x.AttributeDefinition)
-            .WithOne()
-            .HasForeignKey<ProductVariantAttribute>(x => x.AttributeDefinitionId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.AttributeDefinition)
+            .WithMany()
+            .HasForeignKey(x => x.AttributeDefinitionId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+
+        builder.HasOne(x => x.UnitsOfMeasure)
+            .WithMany()
+            .HasForeignKey(x => x.UnitsOfMeasureId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false); 
     }
 }

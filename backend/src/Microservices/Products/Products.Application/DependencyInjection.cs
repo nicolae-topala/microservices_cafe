@@ -3,6 +3,8 @@ using Mapster;
 using MapsterMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Products.Application.Abstractions;
+using Products.Application.Mappings;
 using Shared.Abstractions.Behaviors;
 using System.Reflection;
 
@@ -21,6 +23,8 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(currentAssembly);
             configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
+
+        services.AddSingleton<IElasticsearchAggregationMapper, ElasticsearchAggregationMapper>();
 
         services.AddValidatorsFromAssembly(currentAssembly);
 

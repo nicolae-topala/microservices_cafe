@@ -1,9 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 
 import { auth } from '@/auth';
-
-import TButton from '../components/i18n/TButton';
-import LocaleSwitcher from '../components/localeSwitcher';
+import TButton from '@/components/common/i18n/TButton';
+import LocaleSwitcher from '@/components/common/locale-switcher';
 
 const DashboardPage = async () => {
     const session = await auth();

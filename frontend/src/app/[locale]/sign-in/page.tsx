@@ -1,7 +1,7 @@
 'use client';
 import { signIn } from 'next-auth/react';
 
-import { Button } from '../components/ui/button';
+import { Button } from '@/components/common/ui/button';
 
 export default function SignInPage() {
     const handleSignIn = () => signIn('authServer');

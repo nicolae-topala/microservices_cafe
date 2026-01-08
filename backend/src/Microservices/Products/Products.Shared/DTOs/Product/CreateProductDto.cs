@@ -7,4 +7,6 @@ public record CreateProductDto(
     string Description,
     ProductType Type,
     List<string> Ingredients,
-    List<Guid> CategoryIds);
+    List<Guid> CategoryIds,
+    decimal VariantPrice,
+    Currency VariantCurrency);

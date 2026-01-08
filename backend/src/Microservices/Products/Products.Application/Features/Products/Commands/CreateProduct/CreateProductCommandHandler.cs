@@ -17,20 +17,25 @@ public class CreateProductCommandHandler(IProductsDbContext dbContext)
             .Where(x => request.Product.CategoryIds.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
+        if (categories.Count != request.Product.CategoryIds.Count)
+        {
+            return Result.Failure<Product>(new ResultError("Category.NotFound", "One or more categories not found."));
+        }
+
         var productResult = Product.Create(
             request.Product.Name,
             request.Product.Description,
             request.Product.Type,
-            categories);
+            categories,
+            request.Product.VariantPrice,
+            request.Product.VariantCurrency);
 
         if (productResult.IsFailure)
         {
             return Result.Failure<Product>(productResult.Error);
         }
 
-        await dbContext.Products
-            .AddAsync(productResult.Value, cancellationToken);
-
+        dbContext.Products.Add(productResult.Value);
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Success(productResult.Value);

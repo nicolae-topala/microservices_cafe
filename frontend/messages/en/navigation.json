@@ -1,0 +1,23 @@
+{
+    "navbar": {
+        "home": "Home",
+        "shop": "Shop",
+        "menu": "Menu",
+        "locations": "Locations",
+        "booknow": "Book Now"
+    },
+    "footer":{
+        "about": "About Us",
+        "locations": "Locations",
+        "products": "Products",
+        "coffee": "Coffee",
+        "shipping": "Shipping",
+        "gdpr": "GDPR",
+        "careers": "Careers",
+        "faq": "FAQ",
+        "nutritional_values": "Nutritional values",
+        "privacy_policy": "Privacy Policy",
+        "cookies_policy": "Cookies Policy",
+        "terms_conditions": "Terms & Conditions"
+    }
+}

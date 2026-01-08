@@ -1,10 +1,10 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.IndexManagement;
-using Elastic.Clients.Elasticsearch.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shared.BuildingBlocks.Elasticsearch.Documents;
+using static Shared.BuildingBlocks.Elasticsearch.ElasticsearchConstants;
 
 namespace Shared.BuildingBlocks.Elasticsearch;
 
@@ -31,7 +31,17 @@ public static class ElasticsearchExtensions
                     continue;
                 }
 
-                var createIndexResponse = await client.Indices.CreateAsync(indexName);
+                var createIndexResponse = await client.Indices.CreateAsync(indexName, descriptor =>
+                {
+                    switch (index)
+                    {
+                        case ElasticIndex.Products:
+                            CreateProductMapping(descriptor);
+                            break;
+                        default:
+                            throw new InvalidOperationException($"{indexName} mapping doesn't exist!");
+                    }
+                });
 
                 if (createIndexResponse.IsValidResponse)
                 {
@@ -50,23 +60,42 @@ public static class ElasticsearchExtensions
         }
     }
 
-    private static async Task<CreateIndexResponse> CreateProductsIndexAsync(
-        ElasticsearchClient client,
-        string indexName)
-    {
-        return await client.Indices.CreateAsync(indexName, c => c
-            .Mappings(m => m
-                .Properties<ProductDocument>(p => p
-                    .Keyword(k => k.Id)
-                    .Text(t => t.Name)
-                    .Text(t => t.Description)
-                    .Boolean(b => b.IsVisible)
-                    .Boolean(b => b.IsInStock)
-                    .Keyword(k => k.Type)
-                    .Nested(p => p.Categories)
-                    .Nested(n => n.Variants)
-                    )
-                )
-        );
-    }
+    private static void CreateProductMapping(CreateIndexRequestDescriptor descriptor) =>
+           descriptor.Mappings(m => m
+               .Properties<ProductDocument>(p => p
+                   .Keyword(k => k.Id)
+                   .Text(t => t.Name, td => td.Fields(f => f.Keyword(FieldSuffixes.Keyword)))
+                   .Text(t => t.Description)
+                   .Boolean(b => b.IsVisible)
+                   .Boolean(b => b.IsInStock)
+                   .Keyword(k => k.Type)
+
+                   .Nested(nameof(ProductDocument.Categories), n => n
+                        .Properties(cp => cp
+                            .Keyword(nameof(CategoryDocument.Id))
+                            .Text(nameof(CategoryDocument.Name), t => t.Fields(f => f.Keyword(FieldSuffixes.Keyword)))
+                            .Keyword(nameof(CategoryDocument.ParentCategoryId))
+                        )
+                   )
+                   .Nested(nameof(ProductDocument.Variants), n => n
+                        .Properties(vp => vp
+                            .Keyword(nameof(ProductVariantDocument.Id))
+                            .Boolean(nameof(ProductVariantDocument.IsInStock))
+                            .Boolean(nameof(ProductVariantDocument.IsVisible))
+                            .DoubleNumber(nameof(ProductVariantDocument.PriceAmount))
+                            .Keyword(nameof(ProductVariantDocument.PriceCurrency))
+
+                            .Nested(nameof(ProductVariantDocument.VariantAttributes), va => va
+                                .Properties(ap => ap
+                                    .Keyword(nameof(ProductVariantAttributeDocument.Id))
+                                    .Keyword(nameof(ProductVariantAttributeDocument.Value))
+                                    .Text(nameof(ProductVariantAttributeDocument.AttributeName), t => t.Fields(f => f.Keyword(FieldSuffixes.Keyword)))
+                                    .Text(nameof(ProductVariantAttributeDocument.UnitsOfMeasureName), t => t.Fields(f => f.Keyword(FieldSuffixes.Keyword)))
+                                    .Keyword(nameof(ProductVariantAttributeDocument.UnitsOfMeasureAbbreviation))
+                                )
+                            )
+                        )
+                   )
+               )
+           );
 }
